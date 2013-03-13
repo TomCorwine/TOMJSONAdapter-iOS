@@ -1,0 +1,429 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		F1840A2616CDB5F70093D758 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F1840A2516CDB5F70093D758 /* Foundation.framework */; };
+		F1840A2B16CDB5F70093D758 /* TOMJSONAdapter.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = F1840A2A16CDB5F70093D758 /* TOMJSONAdapter.h */; };
+		F1840A2D16CDB5F70093D758 /* TOMJSONAdapter.m in Sources */ = {isa = PBXBuildFile; fileRef = F1840A2C16CDB5F70093D758 /* TOMJSONAdapter.m */; };
+		F1840A3516CDB5F70093D758 /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F1840A3416CDB5F70093D758 /* SenTestingKit.framework */; };
+		F1840A3716CDB5F70093D758 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F1840A3616CDB5F70093D758 /* UIKit.framework */; };
+		F1840A3816CDB5F70093D758 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F1840A2516CDB5F70093D758 /* Foundation.framework */; };
+		F1840A3B16CDB5F70093D758 /* libTOMJSONAdapter.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F1840A2216CDB5F70093D758 /* libTOMJSONAdapter.a */; };
+		F1840A4416CDB5F70093D758 /* TOMJSONAdapterTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F1840A4316CDB5F70093D758 /* TOMJSONAdapterTests.m */; };
+		F1840A4F16CDC8D60093D758 /* TOMTrack.m in Sources */ = {isa = PBXBuildFile; fileRef = F1840A4E16CDC8D60093D758 /* TOMTrack.m */; };
+		F1840A5216CDC8E90093D758 /* TOMEntry.m in Sources */ = {isa = PBXBuildFile; fileRef = F1840A5116CDC8E90093D758 /* TOMEntry.m */; };
+		F1840A5516CDC8FC0093D758 /* TOMUser.m in Sources */ = {isa = PBXBuildFile; fileRef = F1840A5416CDC8FC0093D758 /* TOMUser.m */; };
+		F1840A5816CDC9080093D758 /* TOMComment.m in Sources */ = {isa = PBXBuildFile; fileRef = F1840A5716CDC9080093D758 /* TOMComment.m */; };
+		F1840A5B16CDC9180093D758 /* TOMThumb.m in Sources */ = {isa = PBXBuildFile; fileRef = F1840A5A16CDC9180093D758 /* TOMThumb.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		F1840A3916CDB5F70093D758 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F1840A1A16CDB5F70093D758 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = F1840A2116CDB5F70093D758;
+			remoteInfo = TOMJSONAdapter;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		F1840A2016CDB5F70093D758 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "include/${PRODUCT_NAME}";
+			dstSubfolderSpec = 16;
+			files = (
+				F1840A2B16CDB5F70093D758 /* TOMJSONAdapter.h in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		F1840A2216CDB5F70093D758 /* libTOMJSONAdapter.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libTOMJSONAdapter.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		F1840A2516CDB5F70093D758 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		F1840A2A16CDB5F70093D758 /* TOMJSONAdapter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TOMJSONAdapter.h; sourceTree = "<group>"; };
+		F1840A2C16CDB5F70093D758 /* TOMJSONAdapter.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TOMJSONAdapter.m; sourceTree = "<group>"; };
+		F1840A3316CDB5F70093D758 /* TOMJSONAdapterTests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TOMJSONAdapterTests.octest; sourceTree = BUILT_PRODUCTS_DIR; };
+		F1840A3416CDB5F70093D758 /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
+		F1840A3616CDB5F70093D758 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = Library/Frameworks/UIKit.framework; sourceTree = DEVELOPER_DIR; };
+		F1840A3E16CDB5F70093D758 /* TOMJSONAdapterTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "TOMJSONAdapterTests-Info.plist"; sourceTree = "<group>"; };
+		F1840A4216CDB5F70093D758 /* TOMJSONAdapterTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TOMJSONAdapterTests.h; sourceTree = "<group>"; };
+		F1840A4316CDB5F70093D758 /* TOMJSONAdapterTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TOMJSONAdapterTests.m; sourceTree = "<group>"; };
+		F1840A4D16CDC8D60093D758 /* TOMTrack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TOMTrack.h; sourceTree = "<group>"; };
+		F1840A4E16CDC8D60093D758 /* TOMTrack.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TOMTrack.m; sourceTree = "<group>"; };
+		F1840A5016CDC8E90093D758 /* TOMEntry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TOMEntry.h; sourceTree = "<group>"; };
+		F1840A5116CDC8E90093D758 /* TOMEntry.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TOMEntry.m; sourceTree = "<group>"; };
+		F1840A5316CDC8FC0093D758 /* TOMUser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TOMUser.h; sourceTree = "<group>"; };
+		F1840A5416CDC8FC0093D758 /* TOMUser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TOMUser.m; sourceTree = "<group>"; };
+		F1840A5616CDC9080093D758 /* TOMComment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TOMComment.h; sourceTree = "<group>"; };
+		F1840A5716CDC9080093D758 /* TOMComment.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TOMComment.m; sourceTree = "<group>"; };
+		F1840A5916CDC9180093D758 /* TOMThumb.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TOMThumb.h; sourceTree = "<group>"; };
+		F1840A5A16CDC9180093D758 /* TOMThumb.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TOMThumb.m; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		F1840A1F16CDB5F70093D758 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F1840A2616CDB5F70093D758 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F1840A2F16CDB5F70093D758 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F1840A3516CDB5F70093D758 /* SenTestingKit.framework in Frameworks */,
+				F1840A3716CDB5F70093D758 /* UIKit.framework in Frameworks */,
+				F1840A3816CDB5F70093D758 /* Foundation.framework in Frameworks */,
+				F1840A3B16CDB5F70093D758 /* libTOMJSONAdapter.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		F1840A1916CDB5F70093D758 = {
+			isa = PBXGroup;
+			children = (
+				F1840A2716CDB5F70093D758 /* TOMJSONAdapter */,
+				F1840A3C16CDB5F70093D758 /* TOMJSONAdapterTests */,
+				F1840A2416CDB5F70093D758 /* Frameworks */,
+				F1840A2316CDB5F70093D758 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		F1840A2316CDB5F70093D758 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				F1840A2216CDB5F70093D758 /* libTOMJSONAdapter.a */,
+				F1840A3316CDB5F70093D758 /* TOMJSONAdapterTests.octest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		F1840A2416CDB5F70093D758 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				F1840A2516CDB5F70093D758 /* Foundation.framework */,
+				F1840A3416CDB5F70093D758 /* SenTestingKit.framework */,
+				F1840A3616CDB5F70093D758 /* UIKit.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		F1840A2716CDB5F70093D758 /* TOMJSONAdapter */ = {
+			isa = PBXGroup;
+			children = (
+				F1840A2A16CDB5F70093D758 /* TOMJSONAdapter.h */,
+				F1840A2C16CDB5F70093D758 /* TOMJSONAdapter.m */,
+			);
+			path = TOMJSONAdapter;
+			sourceTree = "<group>";
+		};
+		F1840A3C16CDB5F70093D758 /* TOMJSONAdapterTests */ = {
+			isa = PBXGroup;
+			children = (
+				F1840A4216CDB5F70093D758 /* TOMJSONAdapterTests.h */,
+				F1840A4316CDB5F70093D758 /* TOMJSONAdapterTests.m */,
+				F1840A4D16CDC8D60093D758 /* TOMTrack.h */,
+				F1840A4E16CDC8D60093D758 /* TOMTrack.m */,
+				F1840A5016CDC8E90093D758 /* TOMEntry.h */,
+				F1840A5116CDC8E90093D758 /* TOMEntry.m */,
+				F1840A5316CDC8FC0093D758 /* TOMUser.h */,
+				F1840A5416CDC8FC0093D758 /* TOMUser.m */,
+				F1840A5616CDC9080093D758 /* TOMComment.h */,
+				F1840A5716CDC9080093D758 /* TOMComment.m */,
+				F1840A5916CDC9180093D758 /* TOMThumb.h */,
+				F1840A5A16CDC9180093D758 /* TOMThumb.m */,
+				F1840A3D16CDB5F70093D758 /* Supporting Files */,
+			);
+			path = TOMJSONAdapterTests;
+			sourceTree = "<group>";
+		};
+		F1840A3D16CDB5F70093D758 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				F1840A3E16CDB5F70093D758 /* TOMJSONAdapterTests-Info.plist */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		F1840A2116CDB5F70093D758 /* TOMJSONAdapter */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F1840A4716CDB5F70093D758 /* Build configuration list for PBXNativeTarget "TOMJSONAdapter" */;
+			buildPhases = (
+				F1840A1E16CDB5F70093D758 /* Sources */,
+				F1840A1F16CDB5F70093D758 /* Frameworks */,
+				F1840A2016CDB5F70093D758 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = TOMJSONAdapter;
+			productName = TOMJSONAdapter;
+			productReference = F1840A2216CDB5F70093D758 /* libTOMJSONAdapter.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		F1840A3216CDB5F70093D758 /* TOMJSONAdapterTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F1840A4A16CDB5F70093D758 /* Build configuration list for PBXNativeTarget "TOMJSONAdapterTests" */;
+			buildPhases = (
+				F1840A2E16CDB5F70093D758 /* Sources */,
+				F1840A2F16CDB5F70093D758 /* Frameworks */,
+				F1840A3016CDB5F70093D758 /* Resources */,
+				F1840A3116CDB5F70093D758 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				F1840A3A16CDB5F70093D758 /* PBXTargetDependency */,
+			);
+			name = TOMJSONAdapterTests;
+			productName = TOMJSONAdapterTests;
+			productReference = F1840A3316CDB5F70093D758 /* TOMJSONAdapterTests.octest */;
+			productType = "com.apple.product-type.bundle";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		F1840A1A16CDB5F70093D758 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0460;
+				ORGANIZATIONNAME = Tracks;
+			};
+			buildConfigurationList = F1840A1D16CDB5F70093D758 /* Build configuration list for PBXProject "TOMJSONAdapter" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = F1840A1916CDB5F70093D758;
+			productRefGroup = F1840A2316CDB5F70093D758 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				F1840A2116CDB5F70093D758 /* TOMJSONAdapter */,
+				F1840A3216CDB5F70093D758 /* TOMJSONAdapterTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		F1840A3016CDB5F70093D758 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		F1840A3116CDB5F70093D758 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Run the unit tests in this test bundle.\n\"${SYSTEM_DEVELOPER_DIR}/Tools/RunUnitTests\"\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		F1840A1E16CDB5F70093D758 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F1840A2D16CDB5F70093D758 /* TOMJSONAdapter.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F1840A2E16CDB5F70093D758 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F1840A4416CDB5F70093D758 /* TOMJSONAdapterTests.m in Sources */,
+				F1840A4F16CDC8D60093D758 /* TOMTrack.m in Sources */,
+				F1840A5216CDC8E90093D758 /* TOMEntry.m in Sources */,
+				F1840A5516CDC8FC0093D758 /* TOMUser.m in Sources */,
+				F1840A5816CDC9080093D758 /* TOMComment.m in Sources */,
+				F1840A5B16CDC9180093D758 /* TOMThumb.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		F1840A3A16CDB5F70093D758 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = F1840A2116CDB5F70093D758 /* TOMJSONAdapter */;
+			targetProxy = F1840A3916CDB5F70093D758 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		F1840A4516CDB5F70093D758 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				ONLY_ACTIVE_ARCH = NO;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		F1840A4616CDB5F70093D758 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		F1840A4816CDB5F70093D758 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DSTROOT = /tmp/TOMJSONAdapter.dst;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "";
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		F1840A4916CDB5F70093D758 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DSTROOT = /tmp/TOMJSONAdapter.dst;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "";
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
+		F1840A4B16CDB5F70093D758 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"\"$(SDKROOT)/Developer/Library/Frameworks\"",
+					"\"$(DEVELOPER_LIBRARY_DIR)/Frameworks\"",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "";
+				INFOPLIST_FILE = "TOMJSONAdapterTests/TOMJSONAdapterTests-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = octest;
+			};
+			name = Debug;
+		};
+		F1840A4C16CDB5F70093D758 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"\"$(SDKROOT)/Developer/Library/Frameworks\"",
+					"\"$(DEVELOPER_LIBRARY_DIR)/Frameworks\"",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "";
+				INFOPLIST_FILE = "TOMJSONAdapterTests/TOMJSONAdapterTests-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = octest;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		F1840A1D16CDB5F70093D758 /* Build configuration list for PBXProject "TOMJSONAdapter" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F1840A4516CDB5F70093D758 /* Debug */,
+				F1840A4616CDB5F70093D758 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		F1840A4716CDB5F70093D758 /* Build configuration list for PBXNativeTarget "TOMJSONAdapter" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F1840A4816CDB5F70093D758 /* Debug */,
+				F1840A4916CDB5F70093D758 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		F1840A4A16CDB5F70093D758 /* Build configuration list for PBXNativeTarget "TOMJSONAdapterTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F1840A4B16CDB5F70093D758 /* Debug */,
+				F1840A4C16CDB5F70093D758 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = F1840A1A16CDB5F70093D758 /* Project object */;
+}
