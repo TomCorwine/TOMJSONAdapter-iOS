@@ -88,9 +88,6 @@ static NSArray *kTOMJSONAdapterDefaultClassesToConsiderArray = nil;
 		if ([classString isEqualToString:@"__NSArrayM"] || [classString isEqualToString:@"__NSArray"]) classString = @"NSArray";
 		if ([classString isEqualToString:@"__NSCFDictionaryM"] || [classString isEqualToString:@"__NSCFDictionary"]) classString = @"NSDictionary";
 		if ([classString isEqualToString:@"__NSCFArrayM"] || [classString isEqualToString:@"__NSCFArray"]) classString = @"NSArray";
-		NSLog(@"Type: %@", type);
-		NSLog(@"ClassString: %@", classString);
-		NSLog(@"===============");
 		if (type && [type isEqualToString:classString] == NO)
 		{
 			NSString *errorDescription = [NSString stringWithFormat:@"TOMJSONAdapter invalid object type detcted. Expecting %@, got %@.", type, NSStringFromClass([object class])];
