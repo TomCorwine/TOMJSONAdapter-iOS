@@ -100,6 +100,7 @@ static NSArray *kTOMJSONAdapterDefaultClassesToConsiderArray = nil;
 		NSString *classString = NSStringFromClass([object class]);
 		if ([classString isEqualToString:@"__NSStringM"] || [classString isEqualToString:@"__NSString"]) classString = @"NSString";
 		if ([classString isEqualToString:@"__NSCFStringM"] || [classString isEqualToString:@"__NSCFString"]) classString = @"NSString";
+		if ([classString isEqualToString:@"__NSCFConstantString"]) classString = @"NSString";
 		if ([classString isEqualToString:@"__NSDate"]) classString = @"NSDate";
 		if ([classString isEqualToString:@"__NSCFDate"]) classString = @"NSDate";
 		if (type && [classString hasPrefix:@"NSString"] == NO && [classString hasPrefix:@"NSDate"] == NO)
