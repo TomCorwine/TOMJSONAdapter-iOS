@@ -15,15 +15,15 @@
 	return @{
 	@"url": @{
 			kTOMJSONAdapterKeyForIdentify: @YES,
-   			kTOMJSONAdapterKeyForType: @"NSString"
+   			kTOMJSONAdapterKeyForType: [NSString class]
    },
 	@"x": @{
 		 	kTOMJSONAdapterKeyForIdentify: @YES,
-   			kTOMJSONAdapterKeyForType: @"NSNumber"
+   			kTOMJSONAdapterKeyForType: [NSNumber class]
    },
 	@"y": @{
 		 	kTOMJSONAdapterKeyForIdentify: @YES,
-			kTOMJSONAdapterKeyForType: @"NSNumber"
+			kTOMJSONAdapterKeyForType: [NSNumber class]
    }
 	};
 }

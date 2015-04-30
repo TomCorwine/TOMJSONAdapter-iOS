@@ -8,6 +8,9 @@
 
 #import "TOMEntry.h"
 
+#import "TOMThumb.h"
+#import "TOMComment.h"
+
 @implementation TOMEntry
 
 #pragma mark - TOMJSONAdapterProtocol
@@ -17,36 +20,41 @@
 	return @{
 		@"eid": @{
 			kTOMJSONAdapterKeyForIdentify: @YES,
-   			kTOMJSONAdapterKeyForMap: @"entryID",
-			kTOMJSONAdapterKeyForType: @"NSString"
+      kTOMJSONAdapterKeyForMap: @"entryID",
+			kTOMJSONAdapterKeyForType: [NSString class]
 			},
 		@"created_at": @{
 			kTOMJSONAdapterKeyForRequired: @NO,
 			kTOMJSONAdapterKeyForMap: @"createdAt",
-			kTOMJSONAdapterKeyForType: @"NSDate-GMT-yyyy-MM-dd'T'HH:mm:ss'Z'"
+			kTOMJSONAdapterKeyForType: [NSDate class],
+      kTOMJSONAdapterKeyForDateFormat: @"yyyy-MM-dd'T'HH:mm:ss'Z'"
 			},
 		@"thumbs": @{
-			kTOMJSONAdapterKeyForType: @"NSArray-TOMThumb"
+			kTOMJSONAdapterKeyForType: [NSArray class],
+      kTOMJSONAdapterKeyForArrayContents: [TOMThumb class]
 			},
 		@"comments": @{
-			kTOMJSONAdapterKeyForType: @"NSArray-TOMComment"
+			kTOMJSONAdapterKeyForType: [NSArray class],
+      kTOMJSONAdapterKeyForArrayContents: [TOMComment class]
 			},
 		@"geo": @{
 			kTOMJSONAdapterKeyForRequired: @NO,
-   			kTOMJSONAdapterKeyForType: @"NSDictionary"
+      kTOMJSONAdapterKeyForType: [NSDictionary class]
 			},
 		@"owner": @{
-			kTOMJSONAdapterKeyForType: @"NSString",
+			kTOMJSONAdapterKeyForType: [NSString class],
 			},
 		@"likes": @{
-			kTOMJSONAdapterKeyForType: @"NSArray-string"
+			kTOMJSONAdapterKeyForType: [NSArray class],
+      kTOMJSONAdapterKeyForArrayContents: [NSString class]
 			},
 		@"views": @{
-			kTOMJSONAdapterKeyForType: @"NSArray-string"
+			kTOMJSONAdapterKeyForType: [NSArray class],
+      kTOMJSONAdapterKeyForArrayContents: [NSString class]
 			},
 		@"type": @{
 			kTOMJSONAdapterKeyForRequired: @NO,
-			kTOMJSONAdapterKeyForType: @"NSNumber"
+			kTOMJSONAdapterKeyForType: [NSNumber class]
 			}
 	};
 }

@@ -19,16 +19,16 @@
 
 - (void)setUp
 {
-    [super setUp];
+  [super setUp];
 
-    // Set-up code here.
-	[TOMJSONAdapter setDefaultClassesToConsider:@[@"TOMTrack", @"TOMEntry", @"TOMUser", @"TOMComment", @"TOMThumb"]];
+  // Set-up code here.
+	[TOMJSONAdapter setDefaultClassesToConsider:@[[TOMTrack class], [TOMEntry class], [TOMUser class], [TOMComment class], [TOMThumb class]]];
 }
 
 - (void)tearDown
 {
-    // Tear-down code here.
-    [super tearDown];
+  // Tear-down code here.
+  [super tearDown];
 }
 
 - (void)test01Comment

@@ -8,6 +8,8 @@
 
 #import "TOMUser.h"
 
+#import "TOMThumb.h"
+
 @implementation TOMUser
 
 #pragma mark - TOMJSONAdapterProtocol
@@ -18,21 +20,22 @@
 		@"uid": @{
 			kTOMJSONAdapterKeyForIdentify: @YES,
 			kTOMJSONAdapterKeyForMap: @"userID",
-			kTOMJSONAdapterKeyForType: @"NSString"
+			kTOMJSONAdapterKeyForType: [NSString class]
 			},
 		@"name": @{
-			kTOMJSONAdapterKeyForType: @"NSString"
+			kTOMJSONAdapterKeyForType: [NSString class]
 			},
 		@"country": @{
-			kTOMJSONAdapterKeyForType: @"NSString"
+			kTOMJSONAdapterKeyForType: [NSString class]
 			},
 		@"tz": @{
 			kTOMJSONAdapterKeyForMap: @"timeZone",
-			kTOMJSONAdapterKeyForType: @"NSString"
+			kTOMJSONAdapterKeyForType: [NSString class]
 			},
 		@"thumbs": @{
 			kTOMJSONAdapterKeyForRequired: @NO,
-			kTOMJSONAdapterKeyForType: @"NSArray-TOMThumb"
+			kTOMJSONAdapterKeyForType: [NSArray class],
+      kTOMJSONAdapterKeyForArrayContents: [TOMThumb class]
 			}
 	};
 }

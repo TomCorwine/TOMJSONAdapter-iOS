@@ -8,6 +8,9 @@
 
 #import "TOMTrack.h"
 
+#import "TOMUser.h"
+#import "TOMEntry.h"
+
 @implementation TOMTrack
 
 #pragma mark - TOMJSONAdapterProtocol
@@ -18,24 +21,26 @@
 		@"tid": @{
 			kTOMJSONAdapterKeyForIdentify: @YES,
 			kTOMJSONAdapterKeyForMap: @"trackID",
-			kTOMJSONAdapterKeyForType: @"NSString"
+			kTOMJSONAdapterKeyForType: [NSString class]
 			},
 		@"name": @{
-			kTOMJSONAdapterKeyForType: @"NSString"
+			kTOMJSONAdapterKeyForType: [NSString class]
 			},
 		@"owner": @{
-			kTOMJSONAdapterKeyForType: @"NSString",
+			kTOMJSONAdapterKeyForType: [NSString class],
 			},
 		@"entries": @{
-			kTOMJSONAdapterKeyForType: @"NSArray-TOMEntry"
+			kTOMJSONAdapterKeyForType: [NSArray class],
+      kTOMJSONAdapterKeyForArrayContents: [TOMEntry class]
 			},
 		@"members": @{
-			kTOMJSONAdapterKeyForType: @"NSArray-TOMUser",
+			kTOMJSONAdapterKeyForType: [NSArray class],
+      kTOMJSONAdapterKeyForArrayContents: [TOMUser class]
 			},
 		@"public": @{
 			kTOMJSONAdapterKeyForRequired: @NO,
 			kTOMJSONAdapterKeyForMap: @"setIsPublic",
-			kTOMJSONAdapterKeyForType: @"bool"
+			kTOMJSONAdapterKeyForType: [TOMJSONAdapterBool class]
 			}
 	};
 }

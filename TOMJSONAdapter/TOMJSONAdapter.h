@@ -12,6 +12,10 @@
 	#error TOMJSONAdapter requires iOS 4.3 or later
 #endif
 
+@interface TOMJSONAdapterBool : NSObject
+// Dummy class to type BOOLEAN
+@end
+
 extern const NSInteger kTOMJSONAdapterInvalidObjectDetected;
 extern const NSInteger kTOMJSONAdapterObjectFailedValidation;
 
@@ -19,6 +23,8 @@ extern NSString *const kTOMJSONAdapterKeyForIdentify;
 extern NSString *const kTOMJSONAdapterKeyForRequired;
 extern NSString *const kTOMJSONAdapterKeyForMap;
 extern NSString *const kTOMJSONAdapterKeyForType;
+extern NSString *const kTOMJSONAdapterKeyForArrayContents;
+extern NSString *const kTOMJSONAdapterKeyForDateFormat;
 
 @protocol TOMJSONAdapterProtocol <NSObject>
 /*
@@ -35,10 +41,18 @@ extern NSString *const kTOMJSONAdapterKeyForType;
  	@"count": @{
  		kTOMJSONAdapterKeyForType: [NSNumber class]
  		},
+  @"items": @{
+    kTOMJSONAdapterKeyForType: [NSArray class],
+    kTOMJSONAdapterKeyForArrayContents: [TOMEntry class]
+    },
+  @"items": @{
+    kTOMJSONAdapterKeyForType: [NSDate class],
+    kTOMJSONAdapterKeyForDateFormat: @"yyyy-MM-dd'T'HH:mm:ss'Z'"
+    },
  	@"is_enabled": @{
  		kTOMJSONAdapterKeyForRequired: @NO,
  		kTOMJSONAdapterKeyForMap: @"enabled",
- 		kTOMJSONAdapterKeyForType: @"bool",
+ 		kTOMJSONAdapterKeyForType: [TOMJSONAdapterBool class],
  		},
  	@"type": @{
  		kTOMJSONAdapterKeyForRequired: @NO,
