@@ -1,6 +1,6 @@
 //
 //  TOMJSONAdapter.m
-//  Tom's iPhone Apps
+//  TOMJSONAdapter
 //
 //  Created by Tom Corwine on 2/13/13.
 //
@@ -29,15 +29,11 @@ static NSArray *kTOMJSONAdapterDefaultClassesToConsiderArray = nil;
 
 @implementation TOMJSONAdapter
 
+#pragma mark - Initialization
+
 + (instancetype)JSONAdapter
 {
-    return [[self alloc] init];
-}
-
-+ (void)setDefaultClassesToConsider:(NSArray *)array
-{
-	[[self class] validateClassesToConsider:array];
-	kTOMJSONAdapterDefaultClassesToConsiderArray = array;
+  return [[self alloc] init];
 }
 
 - (id)initWithClassesToConsider:(NSArray *)array
@@ -46,6 +42,8 @@ static NSArray *kTOMJSONAdapterDefaultClassesToConsiderArray = nil;
 	self.classesToConsider = array;
 	return self;
 }
+
+#pragma mark - Object Creation
 
 - (id)createFromJSONRepresentation:(id)JSONRepresentation error:(NSError **)error
 {
@@ -65,23 +63,19 @@ static NSArray *kTOMJSONAdapterDefaultClassesToConsiderArray = nil;
 
 #pragma mark - Imparatives
 
++ (void)setDefaultClassesToConsider:(NSArray *)array
+{
+  [[self class] validateClassesToConsider:array];
+  kTOMJSONAdapterDefaultClassesToConsiderArray = array;
+}
+
 - (void)setClassesToConsider:(NSArray *)array
 {
 	[[self class] validateClassesToConsider:array];
 	_classesToConsider = array;
 }
 
-#pragma mark - Helpers
-
-+ (void)validateClassesToConsider:(NSArray *)array
-{
-  NSAssert([array isKindOfClass:[NSArray class]], @"[TOMJSONAdapter setClassesToConsider:] parameter not a NSArray.");
-/*
-  for (Class class in array) {
-    NSAssert([class isKindOfClass:[Class class]], @"[TOMJSONAdapter setClassesToConsider:] array parameter contains object type other than Class.");
-  }
-*/
-}
+#pragma mark - Object Creation Helpers
 
 - (id)objectFromObject:(id)object validationDictionary:(NSDictionary *)validationDictionary error:(NSError **)error
 {
@@ -94,8 +88,8 @@ static NSArray *kTOMJSONAdapterDefaultClassesToConsiderArray = nil;
 	{
 		if (classType && NO == [classType isEqual:[NSArray class]])
 		{
-			NSString *errorDescription = [NSString stringWithFormat:@"TOMJSONAdapter invalid object type detcted. Expecting NSArray, got %@.", NSStringFromClass([object class])];
-			*error = [NSError errorWithDomain:errorDescription code:kTOMJSONAdapterObjectFailedValidation userInfo:nil];
+			NSString *errorDescription = [NSString stringWithFormat:@"Expecting NSArray, got %@", NSStringFromClass([object class])];
+      *error = [[self class] errorWithType:kTOMJSONAdapterObjectFailedValidation additionalInfo:errorDescription];
 			object = nil;
 		}
 		else
@@ -110,8 +104,8 @@ static NSArray *kTOMJSONAdapterDefaultClassesToConsiderArray = nil;
 
 		if (classType && NO == [object isKindOfClass:classType])
 		{
-			NSString *errorDescription = [NSString stringWithFormat:@"TOMJSONAdapter invalid object type detcted. Expecting %@, got %@.", classType, NSStringFromClass([object class])];
-			*error = [NSError errorWithDomain:errorDescription code:kTOMJSONAdapterObjectFailedValidation userInfo:nil];
+			NSString *errorDescription = [NSString stringWithFormat:@"Expecting %@, got %@", classType, NSStringFromClass([object class])];
+      *error = [[self class] errorWithType:kTOMJSONAdapterObjectFailedValidation additionalInfo:errorDescription];
 			object = nil;
 		}
 	}
@@ -119,8 +113,8 @@ static NSArray *kTOMJSONAdapterDefaultClassesToConsiderArray = nil;
 	{
     if (classType && NO == [classType isEqual:[NSString class]] && NO == [classType isEqual:[NSDate class]])
 		{
-			NSString *errorDescription = [NSString stringWithFormat:@"TOMJSONAdapter invalid object type detcted. Expecting NSString, got %@.", NSStringFromClass([object class])];
-			*error = [NSError errorWithDomain:errorDescription code:kTOMJSONAdapterObjectFailedValidation userInfo:nil];
+			NSString *errorDescription = [NSString stringWithFormat:@"Expecting NSString, got %@", NSStringFromClass([object class])];
+      *error = [[self class] errorWithType:kTOMJSONAdapterObjectFailedValidation additionalInfo:errorDescription];
 			object = nil;
 		}
     else if (classType && [classType isEqual:[NSDate class]])
@@ -136,8 +130,8 @@ static NSArray *kTOMJSONAdapterDefaultClassesToConsiderArray = nil;
 	{
 		if (classType && NO == [classType isEqual:[NSNumber class]] && NO == [classType isEqual:[TOMJSONAdapterBool class]])
 		{
-			NSString *errorDescription = [NSString stringWithFormat:@"TOMJSONAdapter invalid object type detcted. Expecting NSNumber, got %@.", NSStringFromClass([object class])];
-			*error = [NSError errorWithDomain:errorDescription code:kTOMJSONAdapterObjectFailedValidation userInfo:nil];
+			NSString *errorDescription = [NSString stringWithFormat:@"Expecting NSNumber, got %@", NSStringFromClass([object class])];
+      *error = [[self class] errorWithType:kTOMJSONAdapterObjectFailedValidation additionalInfo:errorDescription];
 			object = nil;
 		}
 
@@ -145,8 +139,8 @@ static NSArray *kTOMJSONAdapterDefaultClassesToConsiderArray = nil;
 		{
 			NSNumber *number = object;
 			if (number.boolValue != YES && number.boolValue != NO)
-			{
-				*error = [NSError errorWithDomain:@"TOMJSONAdapter invalid object type detcted." code:kTOMJSONAdapterObjectFailedValidation userInfo:nil];
+      {
+        *error = [[self class] errorWithType:kTOMJSONAdapterObjectFailedValidation additionalInfo:@"Expecting a NSNumber that's a BOOL"];
 				object = nil;
 			}
 		}
@@ -158,7 +152,7 @@ static NSArray *kTOMJSONAdapterDefaultClassesToConsiderArray = nil;
 	else
 	{
 		// Not a valid object type.
-		*error = [NSError errorWithDomain:@"TOMJSONAdapter invalid object type detcted." code:kTOMJSONAdapterInvalidObjectDetected userInfo:nil];
+    *error = [[self class] errorWithType:kTOMJSONAdapterInvalidObjectDetected additionalInfo:nil];
 		object = nil;
 	}
 
@@ -192,6 +186,10 @@ static NSArray *kTOMJSONAdapterDefaultClassesToConsiderArray = nil;
 		return dictionary;
   }
 
+  if ([class respondsToSelector:@selector(initWithDictionary:)]) {
+    return [[class alloc] initWithDictionary:dictionary]; // Alternate way of initializing object.
+  }
+
 	id object = [[class alloc] init];
 	NSDictionary *validationDictionary = [self validationDictionaryForClass:class];
 	for (NSString *key in validationDictionary.allKeys)
@@ -202,8 +200,8 @@ static NSArray *kTOMJSONAdapterDefaultClassesToConsiderArray = nil;
 
     if (required.boolValue && NO == [dictionary.allKeys containsObject:key])
 		{
-			NSString *errorString = [NSString stringWithFormat:@"TOMJSONAdapter missing required parameter %@.", key];
-			*error = [NSError errorWithDomain:errorString code:kTOMJSONAdapterObjectFailedValidation userInfo:nil];
+			NSString *string = [NSString stringWithFormat:@"Missing required parameter %@", key];
+      *error = [[self class] errorWithType:kTOMJSONAdapterObjectFailedValidation additionalInfo:string];
 			return nil;
 		}
 
@@ -217,21 +215,23 @@ static NSArray *kTOMJSONAdapterDefaultClassesToConsiderArray = nil;
     }
 
 		NSString *map = propertyValidationDictionary[kTOMJSONAdapterKeyForMap];
-		NSString *accessorKey = (map ? map : key); // Map to accessor.
+		NSString *accessorKey = (map ?: key); // Map to accessor.
 		[object setValue:value forKey:accessorKey];
 	}
 
 	return object;
 }
 
+#pragma mark - Class Identification
+
 - (Class)classForUniqueIdentifiers:(NSArray *)array
 {
-	NSArray *classesToConsiderArray = (self.classesToConsider ? self.classesToConsider : kTOMJSONAdapterDefaultClassesToConsiderArray);
-	NSAssert(classesToConsiderArray, @"[TOMJSONAdapter setClassesToConsider:] must be called before attempting to parse JSON.");
+	NSArray *classesToConsiderArray = (self.classesToConsider ?: kTOMJSONAdapterDefaultClassesToConsiderArray);
+	NSAssert(classesToConsiderArray, [[self class] classesToConsiderErrorForMessage:@"Must be called before attempting to parse JSON."]);
 
 	for (Class<TOMJSONAdapterProtocol> class in classesToConsiderArray)
 	{
-		NSAssert([(NSObject *)class conformsToProtocol:@protocol(TOMJSONAdapterProtocol)], @"Models must conform to the TRKJSONAdapterProtocol protocol.");
+		NSAssert([(NSObject *)class conformsToProtocol:@protocol(TOMJSONAdapterProtocol)], [[self class] errorMessageWithClassNameForErrorMessage:@"Classes must conform to the TRKJSONAdapterProtocol protocol."]);
 		NSMutableArray *mutableArray = @[].mutableCopy;
 		NSDictionary *validationDictionary = [self validationDictionaryForClass:class];
 
@@ -256,6 +256,19 @@ static NSArray *kTOMJSONAdapterDefaultClassesToConsiderArray = nil;
 	return [NSDictionary class];
 }
 
+#pragma mark - Validation
+
++ (void)validateClassesToConsider:(NSArray *)array
+{
+  NSAssert([array isKindOfClass:[NSArray class]], [self classesToConsiderErrorForMessage:@"Parameter not a NSArray."]);
+  
+  for (Class class in array) {
+    // This comparision warrants some 'splaining. class == [class class] evaluates to true if 'class' is of type "Class".
+    // SO Post http://stackoverflow.com/questions/355312/in-objective-c-how-can-i-tell-the-difference-between-a-class-and-an-instance-of
+    NSAssert(class == [class class], [self classesToConsiderErrorForMessage:@"Array parameter contains object type other than Class."]);
+  }
+}
+
 - (NSDictionary *)validationDictionaryForClass:(Class)class
 {
   if (nil == self.objectValidationDictionary) {
@@ -275,22 +288,78 @@ static NSArray *kTOMJSONAdapterDefaultClassesToConsiderArray = nil;
 			NSDictionary *objectDictionary = dictionary[objectKey];
 			for (NSString *key in objectDictionary.allKeys)
 			{
-				NSAssert([keyValidationArray containsObject:key], @"Validation key for class %@ is invalid. Key was %@, expecting one of kTOMJSONAdapterKeyForIdentify, kTOMJSONAdapterKeyForMap, kTOMJSONAdapterKeyForRequired, kTOMJSONAdapterKeyForType.", NSStringFromClass(class), key);
+        NSString *items = [keyValidationArray componentsJoinedByString:@", "];
+        NSString *errorDescription = [NSString stringWithFormat:@"Validation key for class %@ is invalid. Key was %@, expecting one of %@.", NSStringFromClass(class), key, items];
+        NSAssert([keyValidationArray containsObject:key], [[self class] errorMessageWithClassNameForErrorMessage:errorDescription]);
 				id value = objectDictionary[key];
-/*
-        if ([key isEqualToString:kTOMJSONAdapterKeyForType] || [key isEqualToString:kTOMJSONAdapterKeyForMap])
+
+        if ([key isEqualToString:kTOMJSONAdapterKeyForType] || [key isEqualToString:kTOMJSONAdapterKeyForArrayContents])
         {
-					NSAssert([value isKindOfClass:[NSString class]], @"TOMJSONAdapter validation value for key %@ in class %@ is not a string.", key, NSStringFromClass(class));
-                }
-				else */if ([key isEqualToString:kTOMJSONAdapterKeyForIdentify] || [key isEqualToString:kTOMJSONAdapterKeyForRequired])
+          NSString *string = [NSString stringWithFormat:@"Validation value for key %@ in class %@ is not an object type Class.", key, NSStringFromClass(class)];
+          // This comparision warrants some 'splaining. value == [value class] evaluates to true if 'value' is of type "Class".
+          // SO Post http://stackoverflow.com/questions/355312/in-objective-c-how-can-i-tell-the-difference-between-a-class-and-an-instance-of
+          NSAssert(value == [value class], [[self class] errorMessageWithClassNameForErrorMessage:string]);
+        }
+        else if ([key isEqualToString:kTOMJSONAdapterKeyForDateFormat] || [key isEqualToString:kTOMJSONAdapterKeyForMap])
         {
-					NSAssert([value isKindOfClass:[NSNumber class]], @"TOMJSONAdapter validation value for property %@ and key %@ in class %@ is not a number.", objectKey, key, NSStringFromClass(class));
+          NSString *string = [NSString stringWithFormat:@"Validation value for key %@ in class %@ is not a NSString.", key, NSStringFromClass(class)];
+					NSAssert([value isKindOfClass:[NSString class]], [[self class] errorMessageWithClassNameForErrorMessage:string]);
+        }
+				else if ([key isEqualToString:kTOMJSONAdapterKeyForIdentify] || [key isEqualToString:kTOMJSONAdapterKeyForRequired])
+        {
+          NSString *string = [NSString stringWithFormat:@"Validation value for property %@ and key %@ in class %@ is not a NSNumber.", objectKey, key, NSStringFromClass(class)];
+					NSAssert([value isKindOfClass:[NSNumber class]], [[self class] errorMessageWithClassNameForErrorMessage:string]);
         }
 			}
 		}
 		self.objectValidationDictionary[key] = dictionary;
 	}
+
 	return dictionary;
+}
+
+#pragma mark - Error Message Helpers
+
++ (NSError *)errorWithType:(NSUInteger)errorType additionalInfo:(NSString *)info
+{
+  NSString *string;
+  switch (errorType)
+  {
+    case kTOMJSONAdapterObjectFailedValidation:
+    {
+      string = @"Object failed validation";
+      break;
+    }
+    case kTOMJSONAdapterInvalidObjectDetected:
+    {
+      string = @"Invalid object type";
+      break;
+    }
+    default:
+    {
+      NSAssert(NO, @"Error type not known.");
+      break;
+    }
+  }
+
+  string = [self errorMessageWithClassNameForErrorMessage:string];
+  if (info.length) {
+    string = [NSString stringWithFormat:@"%@ - %@.", string, info];
+  } else {
+    string = [string stringByAppendingString:@"."];
+  }
+
+  return [NSError errorWithDomain:string code:errorType userInfo:nil];
+}
+
++ (NSString *)classesToConsiderErrorForMessage:(NSString *)errorMessage
+{
+  return [NSString stringWithFormat:@"[%@ setClassesToConsider:] - %@", NSStringFromClass([self class]), errorMessage];
+}
+
++ (NSString *)errorMessageWithClassNameForErrorMessage:(NSString *)errorMessage
+{
+  return [NSString stringWithFormat:@"%@: %@", NSStringFromClass([self class]), errorMessage];
 }
 
 @end

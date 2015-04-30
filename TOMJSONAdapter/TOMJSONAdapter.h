@@ -1,6 +1,6 @@
 //
 //  TOMJSONAdapter.h
-//  Tom's iPhone Apps
+//  TOMJSONAdapter
 //
 //  Created by Tom Corwine on 2/13/13.
 //
@@ -8,8 +8,8 @@
 #import <Foundation/Foundation.h>
 #import <Availability.h>
 
-#if __IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_4_3
-	#error TOMJSONAdapter requires iOS 4.3 or later
+#if __IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_5_0
+	#error TOMJSONAdapter requires iOS 5.0 or later
 #endif
 
 @interface TOMJSONAdapterBool : NSObject
@@ -61,6 +61,8 @@ extern NSString *const kTOMJSONAdapterKeyForDateFormat;
  }
  */
 + (NSDictionary *)JSONAdapterSchema;
+
+- (id)initWithDictionary:(NSDictionary *)dictionary;
 
 @end
 
