@@ -46,17 +46,17 @@ static NSArray *kTOMJSONAdapterDefaultClassesToConsiderArray = nil;
 
 #pragma mark - Object Creation
 
-- (id)createFromJSONRepresentation:(id)JSONRepresentation error:(NSError **)error
+- (id)createFromJSONRepresentation:(id)JSONRepresentation error:(NSError *__autoreleasing *)error
+{
+    return [self createFromJSONRepresentation:JSONRepresentation expectedRootClass:nil error:error];
+}
+
+- (id)createFromJSONRepresentation:(id)JSONRepresentation expectedRootClass:(__unsafe_unretained Class)rootClass error:(NSError *__autoreleasing *)error
 {
 	if ([JSONRepresentation isKindOfClass:[NSString class]])
 	{
 		NSString *string = JSONRepresentation;
 		NSData *data = [string dataUsingEncoding:NSUTF8StringEncoding];
-
-        if (NO == [NSJSONSerialization isValidJSONObject:data]) {
-            *error = [[self class] errorWithType:kTOMJSONAdapterInvalidJSON additionalInfo:nil];
-            return nil;
-        }
 
         JSONRepresentation = [NSJSONSerialization JSONObjectWithData:data options:0 error:error];
 
@@ -65,7 +65,13 @@ static NSArray *kTOMJSONAdapterDefaultClassesToConsiderArray = nil;
         }
 	}
 
-	return [self objectFromObject:JSONRepresentation validationDictionary:nil error:error];
+    id root = [self objectFromObject:JSONRepresentation validationDictionary:nil error:error];
+    if (nil == rootClass || [root class] == rootClass) {
+        return root;
+    } else {
+        *error = [[self class] errorWithType:kTOMJSONAdapterObjectFailedValidation additionalInfo:nil];
+        return nil;
+    }
 }
 
 #pragma mark - Imparatives

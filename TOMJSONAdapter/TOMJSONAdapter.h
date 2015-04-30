@@ -86,4 +86,11 @@ extern NSString *const kTOMJSONAdapterKeyForDateFormat;
  */
 - (id)createFromJSONRepresentation:(id)JSONRepresentation error:(NSError **)error;
 
+/*
+ @pramas
+ JSONRepresentation can be either a NSArray, NSDictionary or NSString.
+ rootClass is the class root object of response is expected to be.
+ */
+- (id)createFromJSONRepresentation:(id)JSONRepresentation expectedRootClass:(Class)rootClass error:(NSError **)error;
+
 @end
