@@ -13,6 +13,7 @@
 
 const NSInteger kTOMJSONAdapterInvalidObjectDetected = 100;
 const NSInteger kTOMJSONAdapterObjectFailedValidation = 101;
+const NSInteger kTOMJSONAdapterInvalidJSON = 102;
 
 NSString *const kTOMJSONAdapterKeyForIdentify = @"kTOMJSONAdapterKeyForIdentify";
 NSString *const kTOMJSONAdapterKeyForRequired = @"kTOMJSONAdapterKeyForRequired";
@@ -51,11 +52,17 @@ static NSArray *kTOMJSONAdapterDefaultClassesToConsiderArray = nil;
 	{
 		NSString *string = JSONRepresentation;
 		NSData *data = [string dataUsingEncoding:NSUTF8StringEncoding];
-		JSONRepresentation = [NSJSONSerialization JSONObjectWithData:data options:0 error:error];
 
-    if (*error) {
+        if (NO == [NSJSONSerialization isValidJSONObject:data]) {
+            *error = [[self class] errorWithType:kTOMJSONAdapterInvalidJSON additionalInfo:nil];
+            return nil;
+        }
+
+        JSONRepresentation = [NSJSONSerialization JSONObjectWithData:data options:0 error:error];
+
+        if (*error) {
 			return nil;
-    }
+        }
 	}
 
 	return [self objectFromObject:JSONRepresentation validationDictionary:nil error:error];
@@ -334,6 +341,11 @@ static NSArray *kTOMJSONAdapterDefaultClassesToConsiderArray = nil;
     {
       string = @"Invalid object type";
       break;
+    }
+    case kTOMJSONAdapterInvalidJSON:
+    {
+        string = @"JSON can not be parsed";
+        break;
     }
     default:
     {

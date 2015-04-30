@@ -18,6 +18,7 @@
 
 extern const NSInteger kTOMJSONAdapterInvalidObjectDetected;
 extern const NSInteger kTOMJSONAdapterObjectFailedValidation;
+extern const NSInteger kTOMJSONAdapterInvalidJSON;
 
 extern NSString *const kTOMJSONAdapterKeyForIdentify;
 extern NSString *const kTOMJSONAdapterKeyForRequired;
