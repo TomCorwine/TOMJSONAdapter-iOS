@@ -1,6 +1,6 @@
 //
 //  TOMJSONAdapter.h
-//  Tom's iPhone Apps
+//  TOMJSONAdapter
 //
 //  Created by Tom Corwine on 2/13/13.
 //
@@ -8,9 +8,13 @@
 #import <Foundation/Foundation.h>
 #import <Availability.h>
 
-#if __IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_4_3
-	#error TOMJSONAdapter requires iOS 4.3 or later
+#if __IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_5_0
+	#error TOMJSONAdapter requires iOS 5.0 or later
 #endif
+
+@interface TOMJSONAdapterBool : NSObject
+// Dummy class to type BOOLEAN
+@end
 
 extern const NSInteger kTOMJSONAdapterInvalidObjectDetected;
 extern const NSInteger kTOMJSONAdapterObjectFailedValidation;
@@ -19,6 +23,8 @@ extern NSString *const kTOMJSONAdapterKeyForIdentify;
 extern NSString *const kTOMJSONAdapterKeyForRequired;
 extern NSString *const kTOMJSONAdapterKeyForMap;
 extern NSString *const kTOMJSONAdapterKeyForType;
+extern NSString *const kTOMJSONAdapterKeyForArrayContents;
+extern NSString *const kTOMJSONAdapterKeyForDateFormat;
 
 @protocol TOMJSONAdapterProtocol <NSObject>
 /*
@@ -35,10 +41,18 @@ extern NSString *const kTOMJSONAdapterKeyForType;
  	@"count": @{
  		kTOMJSONAdapterKeyForType: [NSNumber class]
  		},
+  @"items": @{
+    kTOMJSONAdapterKeyForType: [NSArray class],
+    kTOMJSONAdapterKeyForArrayContents: [TOMEntry class]
+    },
+  @"items": @{
+    kTOMJSONAdapterKeyForType: [NSDate class],
+    kTOMJSONAdapterKeyForDateFormat: @"yyyy-MM-dd'T'HH:mm:ss'Z'"
+    },
  	@"is_enabled": @{
  		kTOMJSONAdapterKeyForRequired: @NO,
  		kTOMJSONAdapterKeyForMap: @"enabled",
- 		kTOMJSONAdapterKeyForType: @"bool",
+ 		kTOMJSONAdapterKeyForType: [TOMJSONAdapterBool class],
  		},
  	@"type": @{
  		kTOMJSONAdapterKeyForRequired: @NO,
@@ -47,6 +61,8 @@ extern NSString *const kTOMJSONAdapterKeyForType;
  }
  */
 + (NSDictionary *)JSONAdapterSchema;
+
+- (id)initWithDictionary:(NSDictionary *)dictionary;
 
 @end
 

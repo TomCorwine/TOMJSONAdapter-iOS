@@ -1,12 +1,13 @@
 //
 //  TOMUser.m
-//  TOMJSONAdapter
+//  TOMJSONAdapterTests
 //
-//  Created by Tom Corwine on 2/14/13.
-//  Copyright (c) 2013 Tracks. All rights reserved.
+//  Created by Tom Corwine on 2/13/13.
 //
 
 #import "TOMUser.h"
+
+#import "TOMThumb.h"
 
 @implementation TOMUser
 
@@ -18,21 +19,22 @@
 		@"uid": @{
 			kTOMJSONAdapterKeyForIdentify: @YES,
 			kTOMJSONAdapterKeyForMap: @"userID",
-			kTOMJSONAdapterKeyForType: @"NSString"
+			kTOMJSONAdapterKeyForType: [NSString class]
 			},
 		@"name": @{
-			kTOMJSONAdapterKeyForType: @"NSString"
+			kTOMJSONAdapterKeyForType: [NSString class]
 			},
 		@"country": @{
-			kTOMJSONAdapterKeyForType: @"NSString"
+			kTOMJSONAdapterKeyForType: [NSString class]
 			},
 		@"tz": @{
 			kTOMJSONAdapterKeyForMap: @"timeZone",
-			kTOMJSONAdapterKeyForType: @"NSString"
+			kTOMJSONAdapterKeyForType: [NSString class]
 			},
 		@"thumbs": @{
 			kTOMJSONAdapterKeyForRequired: @NO,
-			kTOMJSONAdapterKeyForType: @"NSArray-TOMThumb"
+			kTOMJSONAdapterKeyForType: [NSArray class],
+      kTOMJSONAdapterKeyForArrayContents: [TOMThumb class]
 			}
 	};
 }

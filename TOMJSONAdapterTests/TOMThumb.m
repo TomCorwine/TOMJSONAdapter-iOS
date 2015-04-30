@@ -1,9 +1,8 @@
 //
 //  TOMThumb.m
-//  TOMJSONAdapter
+//  TOMJSONAdapterTests
 //
-//  Created by Tom Corwine on 2/14/13.
-//  Copyright (c) 2013 Tracks. All rights reserved.
+//  Created by Tom Corwine on 2/13/13.
 //
 
 #import "TOMThumb.h"
@@ -15,15 +14,15 @@
 	return @{
 	@"url": @{
 			kTOMJSONAdapterKeyForIdentify: @YES,
-   			kTOMJSONAdapterKeyForType: @"NSString"
+   			kTOMJSONAdapterKeyForType: [NSString class]
    },
 	@"x": @{
 		 	kTOMJSONAdapterKeyForIdentify: @YES,
-   			kTOMJSONAdapterKeyForType: @"NSNumber"
+   			kTOMJSONAdapterKeyForType: [NSNumber class]
    },
 	@"y": @{
 		 	kTOMJSONAdapterKeyForIdentify: @YES,
-			kTOMJSONAdapterKeyForType: @"NSNumber"
+			kTOMJSONAdapterKeyForType: [NSNumber class]
    }
 	};
 }

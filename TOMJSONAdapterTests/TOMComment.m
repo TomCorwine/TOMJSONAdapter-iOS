@@ -1,9 +1,8 @@
 //
 //  TOMComment.m
-//  TOMJSONAdapter
+//  TOMJSONAdapterTests
 //
-//  Created by Tom Corwine on 2/14/13.
-//  Copyright (c) 2013 Tracks. All rights reserved.
+//  Created by Tom Corwine on 2/13/13.
 //
 
 #import "TOMComment.h"
@@ -18,14 +17,14 @@
 		@"cid": @{
 			kTOMJSONAdapterKeyForIdentify: @YES,
 			kTOMJSONAdapterKeyForMap: @"commentID",
-			kTOMJSONAdapterKeyForType: @"NSString"
+			kTOMJSONAdapterKeyForType: [NSString class]
 			},
 		@"message": @{
 			kTOMJSONAdapterKeyForMap: @"text",
-			kTOMJSONAdapterKeyForType: @"NSString"
+			kTOMJSONAdapterKeyForType: [NSString class]
 			},
 		@"owner": @{
-			kTOMJSONAdapterKeyForType: @"NSString"
+			kTOMJSONAdapterKeyForType: [NSString class]
 			}
 	};
 }
