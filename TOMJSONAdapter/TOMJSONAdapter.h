@@ -12,16 +12,13 @@
 	#error TOMJSONAdapter requires iOS 4.3 or later
 #endif
 
-const static NSInteger kTOMJSONAdapterInvalidObjectDetected = 100;
-const static NSInteger kTOMJSONAdapterObjectFailedValidation = 101;
+extern const NSInteger kTOMJSONAdapterInvalidObjectDetected;
+extern const NSInteger kTOMJSONAdapterObjectFailedValidation;
 
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wunused-variable"
-static NSString *kTOMJSONAdapterKeyForIdentify = @"kTOMJSONAdapterKeyForIdentify";
-static NSString *kTOMJSONAdapterKeyForRequired = @"kTOMJSONAdapterKeyForRequired";
-static NSString *kTOMJSONAdapterKeyForMap = @"kTOMJSONAdapterKeyForMap";
-static NSString *kTOMJSONAdapterKeyForType = @"kTOMJSONAdapterKeyForType";
-#pragma clang diagnostic pop
+extern NSString *const kTOMJSONAdapterKeyForIdentify;
+extern NSString *const kTOMJSONAdapterKeyForRequired;
+extern NSString *const kTOMJSONAdapterKeyForMap;
+extern NSString *const kTOMJSONAdapterKeyForType;
 
 @protocol TOMJSONAdapterProtocol <NSObject>
 /*
@@ -30,13 +27,13 @@ static NSString *kTOMJSONAdapterKeyForType = @"kTOMJSONAdapterKeyForType";
  	@"oid": @{
  		kTOMJSONAdapterKeyForIdentify: @YES,
  		kTOMJSONAdapterKeyForMap: @"objectID",
- 		kTOMJSONAdapterKeyForType: @"NSString"
+ 		kTOMJSONAdapterKeyForType: [NSString class]
  		},
  	@"name": @{,
- 		kTOMJSONAdapterKeyForType: @"NSString"
+ 		kTOMJSONAdapterKeyForType: [NSString class]
  		},
  	@"count": @{
- 		kTOMJSONAdapterKeyForType: @"NSNumber"
+ 		kTOMJSONAdapterKeyForType: [NSNumber class]
  		},
  	@"is_enabled": @{
  		kTOMJSONAdapterKeyForRequired: @NO,
@@ -45,11 +42,12 @@ static NSString *kTOMJSONAdapterKeyForType = @"kTOMJSONAdapterKeyForType";
  		},
  	@"type": @{
  		kTOMJSONAdapterKeyForRequired: @NO,
- 		kTOMJSONAdapterKeyForType: @"NSNumber"
+ 		kTOMJSONAdapterKeyForType: [NSNumber class]
  		}
  }
  */
 + (NSDictionary *)JSONAdapterSchema;
+
 @end
 
 @interface TOMJSONAdapter : NSObject
@@ -61,6 +59,8 @@ static NSString *kTOMJSONAdapterKeyForType = @"kTOMJSONAdapterKeyForType";
 
 + (void)setDefaultClassesToConsider:(NSArray *)array;
 - (id)initWithClassesToConsider:(NSArray *)array;
+
++ (instancetype)JSONAdapter;
 
 /*
  @pramas
