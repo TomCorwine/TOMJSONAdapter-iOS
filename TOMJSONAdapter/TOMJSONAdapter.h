@@ -69,14 +69,6 @@ extern NSString *const kTOMJSONAdapterKeyForDateFormat;
 @end
 
 @interface TOMJSONAdapter : NSObject
-/*
- @pramas
- array: A NSArray of NSString objects declaring which classes to consider when parsing JSON.
- */
-@property (nonatomic, strong) NSArray *classesToConsider;
-
-+ (void)setDefaultClassesToConsider:(NSArray *)array;
-- (id)initWithClassesToConsider:(NSArray *)array;
 
 + (instancetype)JSONAdapter;
 

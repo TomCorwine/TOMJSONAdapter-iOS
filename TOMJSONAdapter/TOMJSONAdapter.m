@@ -22,8 +22,6 @@ NSString *const kTOMJSONAdapterKeyForType = @"kTOMJSONAdapterKeyForType";
 NSString *const kTOMJSONAdapterKeyForArrayContents = @"kTOMJSONAdapterKeyForArrayContents";
 NSString *const kTOMJSONAdapterKeyForDateFormat = @"kTOMJSONAdapterKeyForDateFormat";
 
-static NSArray *kTOMJSONAdapterDefaultClassesToConsiderArray = nil;
-
 @interface TOMJSONAdapter ()
 @property (strong) NSMutableDictionary *objectValidationDictionary;
 @end
@@ -35,13 +33,6 @@ static NSArray *kTOMJSONAdapterDefaultClassesToConsiderArray = nil;
 + (instancetype)JSONAdapter
 {
   return [[self alloc] init];
-}
-
-- (id)initWithClassesToConsider:(NSArray *)array
-{
-	self = [super init];
-	self.classesToConsider = array;
-	return self;
 }
 
 #pragma mark - Object Creation
@@ -58,34 +49,20 @@ static NSArray *kTOMJSONAdapterDefaultClassesToConsiderArray = nil;
 		NSString *string = JSONRepresentation;
 		NSData *data = [string dataUsingEncoding:NSUTF8StringEncoding];
 
-        JSONRepresentation = [NSJSONSerialization JSONObjectWithData:data options:0 error:error];
+    JSONRepresentation = [NSJSONSerialization JSONObjectWithData:data options:0 error:error];
 
-        if (*error) {
+    if (*error) {
 			return nil;
-        }
+    }
 	}
 
-    id root = [self objectFromObject:JSONRepresentation validationDictionary:nil error:error];
-    if (nil == rootClass || [root class] == rootClass) {
-        return root;
-    } else {
-        *error = [[self class] errorWithType:kTOMJSONAdapterObjectFailedValidation additionalInfo:nil];
-        return nil;
-    }
-}
-
-#pragma mark - Imparatives
-
-+ (void)setDefaultClassesToConsider:(NSArray *)array
-{
-  [[self class] validateClassesToConsider:array];
-  kTOMJSONAdapterDefaultClassesToConsiderArray = array;
-}
-
-- (void)setClassesToConsider:(NSArray *)array
-{
-	[[self class] validateClassesToConsider:array];
-	_classesToConsider = array;
+  id root = [self objectFromObject:JSONRepresentation validationDictionary:nil error:error];
+  if (nil == rootClass || [root class] == rootClass) {
+    return root;
+  } else {
+    *error = [[self class] errorWithType:kTOMJSONAdapterObjectFailedValidation additionalInfo:nil];
+    return nil;
+  }
 }
 
 #pragma mark - Object Creation Helpers
