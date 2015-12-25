@@ -63,11 +63,9 @@ NSString *const kTOMJSONAdapterKeyForDateFormat = @"kTOMJSONAdapterKeyForDateFor
 	}
 
   id root = [self objectFromObject:JSONRepresentation validationDictionary:@{kTOMJSONAdapterKeyForType: rootClass}];
-  if (nil == rootClass || [root class] == rootClass) {
-    //return root;
-  } else {
-    *error = [[self class] errorWithType:kTOMJSONAdapterObjectFailedValidation additionalInfo:nil];
-    //return nil;
+
+  if (NO == [[root class] isEqual:rootClass]) {
+    [self createErrorWithType:kTOMJSONAdapterObjectFailedValidation additionalInfo:nil];
   }
 
   if (self.errors.count > 0 && nil != errors) {
@@ -101,8 +99,8 @@ NSString *const kTOMJSONAdapterKeyForDateFormat = @"kTOMJSONAdapterKeyForDateFor
     else
 		{
 			NSString *errorDescription = [NSString stringWithFormat:@"Expecting NSArray, got %@", NSStringFromClass([object class])];
-      NSError *error = [[self class] errorWithType:kTOMJSONAdapterObjectFailedValidation additionalInfo:errorDescription];
-      [self.errors addObject:error];
+      [self createErrorWithType:kTOMJSONAdapterObjectFailedValidation additionalInfo:errorDescription];
+
 			object = nil;
 		}
 	}
@@ -111,8 +109,8 @@ NSString *const kTOMJSONAdapterKeyForDateFormat = @"kTOMJSONAdapterKeyForDateFor
     if (NO == [object isKindOfClass:[NSString class]])
     {
       NSString *errorDescription = [NSString stringWithFormat:@"Expecting NSString, got %@", NSStringFromClass([object class])];
-      NSError *error = [[self class] errorWithType:kTOMJSONAdapterObjectFailedValidation additionalInfo:errorDescription];
-      [self.errors addObject:error];
+      [self createErrorWithType:kTOMJSONAdapterObjectFailedValidation additionalInfo:errorDescription];
+
       object = nil;
     }
   }
@@ -129,8 +127,8 @@ NSString *const kTOMJSONAdapterKeyForDateFormat = @"kTOMJSONAdapterKeyForDateFor
     else
     {
       NSString *errorDescription = [NSString stringWithFormat:@"Expecting NSDate, got %@", NSStringFromClass([object class])];
-      NSError *error = [[self class] errorWithType:kTOMJSONAdapterObjectFailedValidation additionalInfo:errorDescription];
-      [self.errors addObject:error];
+      [self createErrorWithType:kTOMJSONAdapterObjectFailedValidation additionalInfo:errorDescription];
+
       object = nil;
     }
 	}
@@ -139,8 +137,8 @@ NSString *const kTOMJSONAdapterKeyForDateFormat = @"kTOMJSONAdapterKeyForDateFor
 		if (NO == [object isKindOfClass:[NSNumber class]])
 		{
 			NSString *errorDescription = [NSString stringWithFormat:@"Expecting NSNumber, got %@", NSStringFromClass([object class])];
-      NSError *error = [[self class] errorWithType:kTOMJSONAdapterObjectFailedValidation additionalInfo:errorDescription];
-      [self.errors addObject:error];
+      [self createErrorWithType:kTOMJSONAdapterObjectFailedValidation additionalInfo:errorDescription];
+
 			object = nil;
 		}
   }
@@ -151,30 +149,36 @@ NSString *const kTOMJSONAdapterKeyForDateFormat = @"kTOMJSONAdapterKeyForDateFor
       NSNumber *number = object;
       if (number.boolValue != YES && number.boolValue != NO)
       {
-        NSError *error = [[self class] errorWithType:kTOMJSONAdapterObjectFailedValidation additionalInfo:@"Expecting a NSNumber that's a BOOL"];
-        [self.errors addObject:error];
+        [self createErrorWithType:kTOMJSONAdapterObjectFailedValidation additionalInfo:@"Expecting a NSNumber that's a BOOL"];
+
         object = nil;
       }
     }
     else
     {
       NSString *errorDescription = [NSString stringWithFormat:@"Expecting TOMJSONAdapterBool, got %@", NSStringFromClass([object class])];
-      NSError *error = [[self class] errorWithType:kTOMJSONAdapterObjectFailedValidation additionalInfo:errorDescription];
-      [self.errors addObject:error];
+      [self createErrorWithType:kTOMJSONAdapterObjectFailedValidation additionalInfo:errorDescription];
+      object = nil;
+    }
+  }
+  else if ([object isKindOfClass:[NSDictionary class]])
+  {
+    object = [self objectOfType:classType fromDictionary:object];
+
+    if (NO == [object isKindOfClass:classType])
+    {
+      NSString *errorDescription = [NSString stringWithFormat:@"Expecting %@, got %@", classType, NSStringFromClass([object class])];
+      [self createErrorWithType:kTOMJSONAdapterObjectFailedValidation additionalInfo:errorDescription];
+
       object = nil;
     }
   }
   else
   {
-    object = [self objectFromDictionary:object];
+    NSString *errorDescription = [NSString stringWithFormat:@"Expecting NSDictionary, got %@", NSStringFromClass([object class])];
+    [self createErrorWithType:kTOMJSONAdapterObjectFailedValidation additionalInfo:errorDescription];
 
-    if (NO == [object isKindOfClass:classType])
-    {
-      NSString *errorDescription = [NSString stringWithFormat:@"Expecting %@, got %@", classType, NSStringFromClass([object class])];
-      NSError *error = [[self class] errorWithType:kTOMJSONAdapterObjectFailedValidation additionalInfo:errorDescription];
-      [self.errors addObject:error];
-      object = nil;
-    }
+    object = nil;
   }
 
 	return object;
@@ -196,9 +200,8 @@ NSString *const kTOMJSONAdapterKeyForDateFormat = @"kTOMJSONAdapterKeyForDateFor
 	return [NSArray arrayWithArray:mutableArray];
 }
 
-- (id)objectFromDictionary:(NSDictionary *)dictionary
+- (id)objectOfType:(Class)class fromDictionary:(NSDictionary *)dictionary
 {
-	Class class = [self classForUniqueIdentifiers:dictionary.allKeys];
   if (class == [NSDictionary class]) {
 		return dictionary;
   }
@@ -218,8 +221,8 @@ NSString *const kTOMJSONAdapterKeyForDateFormat = @"kTOMJSONAdapterKeyForDateFor
     if (required.boolValue && NO == [dictionary.allKeys containsObject:key])
 		{
 			NSString *string = [NSString stringWithFormat:@"Missing required parameter %@", key];
-      NSError *error = [[self class] errorWithType:kTOMJSONAdapterObjectFailedValidation additionalInfo:string];
-      [self.errors addObject:error];
+      [self createErrorWithType:kTOMJSONAdapterObjectFailedValidation additionalInfo:string];
+
 			return nil;
 		}
 
@@ -290,6 +293,7 @@ NSString *const kTOMJSONAdapterKeyForDateFormat = @"kTOMJSONAdapterKeyForDateFor
 		for (NSString *objectKey in dictionary.allKeys)
 		{
 			NSDictionary *objectDictionary = dictionary[objectKey];
+
 			for (NSString *key in objectDictionary.allKeys)
 			{
         NSString *items = [keyValidationArray componentsJoinedByString:@", "];
@@ -307,15 +311,16 @@ NSString *const kTOMJSONAdapterKeyForDateFormat = @"kTOMJSONAdapterKeyForDateFor
         else if ([key isEqualToString:kTOMJSONAdapterKeyForDateFormat] || [key isEqualToString:kTOMJSONAdapterKeyForMap])
         {
           NSString *string = [NSString stringWithFormat:@"Validation value for key %@ in class %@ is not a NSString.", key, NSStringFromClass(class)];
-                    NSAssert([value isKindOfClass:[NSString class]], [[self class] errorMessageWithClassNameForErrorMessage:string]);
+          NSAssert([value isKindOfClass:[NSString class]], [[self class] errorMessageWithClassNameForErrorMessage:string]);
         }
-                else if ([key isEqualToString:kTOMJSONAdapterKeyForIdentify] || [key isEqualToString:kTOMJSONAdapterKeyForRequired])
+        else if ([key isEqualToString:kTOMJSONAdapterKeyForIdentify] || [key isEqualToString:kTOMJSONAdapterKeyForRequired])
         {
           NSString *string = [NSString stringWithFormat:@"Validation value for property %@ and key %@ in class %@ is not a NSNumber.", objectKey, key, NSStringFromClass(class)];
-                    NSAssert([value isKindOfClass:[NSNumber class]], [[self class] errorMessageWithClassNameForErrorMessage:string]);
+          NSAssert([value isKindOfClass:[NSNumber class]], [[self class] errorMessageWithClassNameForErrorMessage:string]);
         }
 			}
 		}
+
 		self.objectValidationDictionary[key] = dictionary;
 	}
 
@@ -324,7 +329,7 @@ NSString *const kTOMJSONAdapterKeyForDateFormat = @"kTOMJSONAdapterKeyForDateFor
 
 #pragma mark - Error Message Helpers
 
-+ (NSError *)errorWithType:(NSUInteger)errorType additionalInfo:(NSString *)info
+- (void)createErrorWithType:(NSUInteger)errorType additionalInfo:(NSString *)info
 {
   NSString *string;
   switch (errorType)
@@ -341,8 +346,8 @@ NSString *const kTOMJSONAdapterKeyForDateFormat = @"kTOMJSONAdapterKeyForDateFor
     }
     case kTOMJSONAdapterInvalidJSON:
     {
-        string = @"JSON can not be parsed";
-        break;
+      string = @"JSON can not be parsed";
+      break;
     }
     default:
     {
@@ -358,15 +363,12 @@ NSString *const kTOMJSONAdapterKeyForDateFormat = @"kTOMJSONAdapterKeyForDateFor
     string = [string stringByAppendingString:@"."];
   }
 
-  return [NSError errorWithDomain:string code:errorType userInfo:nil];
+  NSError *error = [NSError errorWithDomain:string code:errorType userInfo:nil];
+
+  [self.errors addObject:error];
 }
 
-+ (NSString *)classesToConsiderErrorForMessage:(NSString *)errorMessage
-{
-  return [NSString stringWithFormat:@"[%@ setClassesToConsider:] - %@", NSStringFromClass([self class]), errorMessage];
-}
-
-+ (NSString *)errorMessageWithClassNameForErrorMessage:(NSString *)errorMessage
+- (NSString *)errorMessageWithClassNameForErrorMessage:(NSString *)errorMessage
 {
   return [NSString stringWithFormat:@"%@: %@", NSStringFromClass([self class]), errorMessage];
 }
