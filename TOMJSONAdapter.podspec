@@ -2,10 +2,17 @@ Pod::Spec.new do |spec|
   spec.name         = 'TOMJSONAdapter'
   spec.version      = '1.0.0'
   spec.license      = 'Public Domain'
-  spec.homepage     = 'https://github.com/TomCorwine/TOMJSONAdapter-iOS/blob/master/README.md'
-  spec.authors      = 'Tom Corwine'
-  spec.summary      = 'JSON adapter for iOS.'
-  spec.source       = { :git => 'https://github.com/TomCorwine/TOMJSONAdapter-iOS.git' }
-  spec.source_files = 'TOMJSONAdapter/TOMJSONAdapter.{h,m}'
-end
+  spec.summary      = "A Library for parsing JSON into an object graph."
+  spec.description  = <<-DESC
+                   A Library for parsing JSON into an object graph.
+                   DESC
+  spec.homepage     = 'https://github.com/TomCorwine/TOMJSONAdapter-iOS'
 
+  spec.author       = { "Tom Corwine" => "tc@corwine.org" }
+  spec.source       = { :git => 'https://github.com/TomCorwine/TOMJSONAdapter-iOS.git' }
+
+  spec.requires_arc = true
+  spec.source_files  = "**/*.{h,m}"
+
+  spec.public_header_files = "**/*.h"
+end
