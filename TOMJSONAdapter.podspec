@@ -12,7 +12,7 @@ Pod::Spec.new do |spec|
   spec.source       = { :git => 'https://github.com/TomCorwine/TOMJSONAdapter-iOS.git' }
 
   spec.requires_arc = true
-  spec.source_files  = "**/*.{h,m}"
+  spec.source_files  = "TOMJSONAdapter/**.{h,m}"
 
-  spec.public_header_files = "**/*.h"
+  spec.public_header_files = "TOMJSONAdapter/**.h"
 end
