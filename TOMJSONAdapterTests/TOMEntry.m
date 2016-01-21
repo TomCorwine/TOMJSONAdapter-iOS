@@ -57,7 +57,12 @@
 		@"type": @{
 			kTOMJSONAdapterKeyForRequired: @NO,
 			kTOMJSONAdapterKeyForType: [NSNumber class]
-			}
+			},
+        @"geo.coordinates": @{
+                kTOMJSONAdapterKeyForMap: @"coordinates",
+                kTOMJSONAdapterKeyForRequired: @NO,
+                kTOMJSONAdapterKeyForType: [NSArray class]
+                }
 	};
 }
 

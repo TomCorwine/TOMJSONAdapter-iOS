@@ -14,14 +14,16 @@ typedef enum {
 
 @interface TOMEntry : NSObject <TOMJSONAdapterProtocol>
 
-@property (strong) NSString *entryID;
-@property (strong) NSArray *thumbs;
-@property (strong) NSDictionary *geo;
-@property (strong) NSString *owner;
-@property (strong) NSArray *comments;
-@property (strong) NSArray *likes;
-@property (strong) NSArray *views;
-@property (strong) NSNumber *type;
-@property (strong) NSDate *createdAt;
+@property (nonatomic, strong) NSString *entryID;
+@property (nonatomic, strong) NSArray *thumbs;
+@property (nonatomic, strong) NSDictionary *geo;
+@property (nonatomic, strong) NSString *owner;
+@property (nonatomic, strong) NSArray *comments;
+@property (nonatomic, strong) NSArray *likes;
+@property (nonatomic, strong) NSArray *views;
+@property (nonatomic, strong) NSNumber *type;
+@property (nonatomic, strong) NSDate *createdAt;
+
+@property (nonatomic, strong) NSArray *coordinates;
 
 @end

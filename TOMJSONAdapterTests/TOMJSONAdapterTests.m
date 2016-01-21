@@ -98,6 +98,8 @@
 	XCTAssertTrue([entry.comments isKindOfClass:[NSArray class]], @"Expecting a NSArray, got %@.", NSStringFromClass([entry.comments class]));
 	XCTAssertTrue([entry.likes isKindOfClass:[NSArray class]], @"Expecting a NSArray, got %@.", NSStringFromClass([entry.likes class]));
 	XCTAssertTrue([entry.views isKindOfClass:[NSArray class]], @"Expecting a NSArray, got %@.", NSStringFromClass([entry.views class]));
+  XCTAssertTrue([entry.coordinates isKindOfClass:[NSArray class]], @"Expecting a NSArray, got %@.", NSStringFromClass([entry.coordinates class]));
+
 	for (TOMComment *comment in entry.comments)
 	{
 		XCTAssertTrue([comment isKindOfClass:[TOMComment class]], @"Expecting a TOMComment, got %@.", NSStringFromClass([comment class]));
@@ -105,6 +107,7 @@
 		XCTAssertTrue([comment.text isEqualToString:@"Congrats!"], @"text doesn't match");
 		XCTAssertTrue([comment.owner isEqualToString:@"50e5ecfe8768a1336c000019"], @"owner doesn't match");
 	}
+
 	for (TOMThumb *thumb in entry.thumbs)
 	{
 		XCTAssertTrue([thumb isKindOfClass:[TOMThumb class]], @"Expecting a TOMThumb, got %@.", NSStringFromClass([thumb class]));
@@ -112,16 +115,24 @@
 		XCTAssertTrue(thumb.x.integerValue == 576, @"x doesn't match");
 		XCTAssertTrue(thumb.y.integerValue == 344, @"y doesn't match");
 	}
+
 	for (NSString *like in entry.likes)
 	{
 		XCTAssertTrue([like isKindOfClass:[NSString class]], @"Expecting a NSString, got %@.", NSStringFromClass([like class]));
 		XCTAssertTrue([like isEqualToString:@"501fd8718768a126bc000001"] || [like isEqualToString:@"511fe8718768a126bc000032"], @"like doesn't match.");
 	}
+
 	for (NSString *view in entry.views)
 	{
 		XCTAssertTrue([view isKindOfClass:[NSString class]], @"Expecting a NSString, got %@.", NSStringFromClass([view class]));
 		XCTAssertTrue([view isEqualToString:@"501fd8718768a126bc000001"] || [view isEqualToString:@"511fe8718768a126bc000032"], @"view doesn't match.");
 	}
+
+  XCTAssertTrue(entry.coordinates.count == 2, @"Expecting 'coordinates' property to be a 2 item NSArray.");
+  NSNumber *lon = entry.coordinates[0];
+  NSNumber *lat = entry.coordinates[1];
+  XCTAssertTrue(lon.doubleValue == -40.34324344);
+  XCTAssertTrue(lat.doubleValue == 70.434388743);
 }
 
 - (id)parseJson:(NSString *)json expectedClass:(Class)class

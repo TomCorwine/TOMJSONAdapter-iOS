@@ -214,9 +214,47 @@ NSString *const kTOMJSONAdapterKeyForDateFormat = @"kTOMJSONAdapterKeyForDateFor
 	NSDictionary *validationDictionary = [self validationDictionaryForClass:class];
 	for (NSString *key in validationDictionary.allKeys)
 	{
-		NSDictionary *propertyValidationDictionary = validationDictionary[key];
-		id value = dictionary[key];
-		NSNumber *required = ([propertyValidationDictionary.allKeys containsObject:kTOMJSONAdapterKeyForRequired] ? propertyValidationDictionary[kTOMJSONAdapterKeyForRequired] : @YES); // Default to YES unless dictionary contains a kTOMJSONAdapterKeyForRequired key.
+    id value;
+
+    NSDictionary *propertyValidationDictionary = validationDictionary[key];
+    NSString *map = propertyValidationDictionary[kTOMJSONAdapterKeyForMap];
+
+    if (NSNotFound != [key rangeOfString:@"."].location) // key contains a period
+    {
+      NSArray *keys = [key componentsSeparatedByString:@"."];
+
+      if (nil == map)
+      {
+        NSString *string = [NSString stringWithFormat:@"A map key is required with dot notation for key %@.", key];
+        [self createErrorWithType:kTOMJSONAdapterObjectFailedValidation additionalInfo:string];
+        return nil;
+      }
+
+      NSDictionary *newDictionary = dictionary;
+
+      for (NSString *subKey in keys)
+      {
+        if ([newDictionary isKindOfClass:[NSDictionary class]])
+        {
+          newDictionary = newDictionary[subKey];
+        }
+        else
+        {
+          NSString *string = [NSString stringWithFormat:@"Unable to find subkey: %@ on %@", subKey, key];
+          [self createErrorWithType:kTOMJSONAdapterObjectFailedValidation additionalInfo:string];
+
+          return nil;
+        }
+      }
+
+      value = newDictionary;
+    }
+    else
+    {
+      value = dictionary[key];
+    }
+
+    NSNumber *required = ([propertyValidationDictionary.allKeys containsObject:kTOMJSONAdapterKeyForRequired] ? propertyValidationDictionary[kTOMJSONAdapterKeyForRequired] : @NO); // Default to NO unless dictionary contains a kTOMJSONAdapterKeyForRequired key.
 
     if (required.boolValue && NO == [dictionary.allKeys containsObject:key])
 		{
@@ -232,7 +270,6 @@ NSString *const kTOMJSONAdapterKeyForDateFormat = @"kTOMJSONAdapterKeyForDateFor
 
 		value = [self objectFromObject:value validationDictionary:propertyValidationDictionary];
 
-		NSString *map = propertyValidationDictionary[kTOMJSONAdapterKeyForMap];
 		NSString *accessorKey = (map ?: key); // Map to accessor.
 		[object setValue:value forKey:accessorKey];
 	}
