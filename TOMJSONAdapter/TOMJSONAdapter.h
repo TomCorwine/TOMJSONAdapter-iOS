@@ -12,7 +12,7 @@
 	#error TOMJSONAdapter requires iOS 5.0 or later
 #endif
 
-@interface TOMJSONAdapterBool : NSObject
+@interface TOMJSONAdapterBool : NSNumber
 // Dummy class to type BOOLEAN
 @end
 
