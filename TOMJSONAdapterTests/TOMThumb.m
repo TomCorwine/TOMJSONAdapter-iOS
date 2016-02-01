@@ -12,18 +12,18 @@
 + (NSDictionary *)JSONAdapterSchema
 {
 	return @{
-	@"url": @{
-			kTOMJSONAdapterKeyForIdentify: @YES,
-   			kTOMJSONAdapterKeyForType: [NSString class]
-   },
-	@"x": @{
-		 	kTOMJSONAdapterKeyForIdentify: @YES,
-   			kTOMJSONAdapterKeyForType: [NSNumber class]
-   },
-	@"y": @{
-		 	kTOMJSONAdapterKeyForIdentify: @YES,
-			kTOMJSONAdapterKeyForType: [NSNumber class]
-   }
+    @"url": @{
+        //kTOMJSONAdapterKeyForIdentify: @YES,
+        //kTOMJSONAdapterKeyForType: [NSString class]
+     },
+    @"x": @{
+        //kTOMJSONAdapterKeyForIdentify: @YES,
+        //kTOMJSONAdapterKeyForType: [NSNumber class]
+     },
+    @"y": @{
+        //kTOMJSONAdapterKeyForIdentify: @YES,
+        //kTOMJSONAdapterKeyForType: [NSNumber class]
+     }
 	};
 }
 

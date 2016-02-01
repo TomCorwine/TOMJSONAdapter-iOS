@@ -65,8 +65,8 @@
 	TOMThumb *thumb = [self parseJson:json expectedClass:[TOMThumb class]];
 	XCTAssertTrue([thumb isKindOfClass:[TOMThumb class]], @"Expecting a TOMThumb, got %@.", NSStringFromClass([thumb class]));
 	XCTAssertTrue([thumb.url isEqualToString:@"http://localhost/43247328927343"], @"url doesn't match");
-	XCTAssertTrue(thumb.x.integerValue == 576, @"x doesn't match");
-	XCTAssertTrue(thumb.y.integerValue == 344, @"y doesn't match");
+	XCTAssertTrue(thumb.x == 576.0f, @"x doesn't match");
+	XCTAssertTrue(thumb.y == 344.0f, @"y doesn't match");
 }
 
 - (void)test04Entry
@@ -76,6 +76,7 @@
 	\"owner\": \"501fd8718768a126bc000001\", \
 	\"created_at\": \"2013-03-13'T'12:04:03'Z'\", \
 	\"type\": 1, \
+  \"enabled\": true, \
 	\"geo\": {\"type\": \"Point\", \"coordinates\": [-40.34324344, 70.434388743]}, \
 	\"comments\": [{\"cid\": \"511fe8718768a126bc000032\", \
     	\"message\": \"Congrats!\", \
@@ -92,7 +93,8 @@
 	XCTAssertTrue([entry.owner isEqualToString:@"501fd8718768a126bc000001"], @"owner doesn't match");
 	//XCTAssertTrue([entry.createdAt isKindOfClass:[NSDate class]], @"Expecting a NSDate, got %@.", NSStringFromClass([entry.createdAt class]));
 	//XCTAssertTrue(entry.createdAt.timeIntervalSince1970, @"createdAt doesn't match");
-	XCTAssertTrue(entry.type.integerValue == 1, @"type doesn't match");
+	XCTAssertTrue(entry.type == 1, @"type isn't 1");
+  XCTAssertTrue(entry.enabled == YES, @"enabled isn't YES");
 	XCTAssertTrue([entry.geo isKindOfClass:[NSDictionary class]], @"Expecting a NSDictionary, got %@.", NSStringFromClass([entry.geo class]));
 	XCTAssertTrue([entry.thumbs isKindOfClass:[NSArray class]], @"Expecting a NSArray, got %@.", NSStringFromClass([entry.thumbs class]));
 	XCTAssertTrue([entry.comments isKindOfClass:[NSArray class]], @"Expecting a NSArray, got %@.", NSStringFromClass([entry.comments class]));
@@ -112,8 +114,8 @@
 	{
 		XCTAssertTrue([thumb isKindOfClass:[TOMThumb class]], @"Expecting a TOMThumb, got %@.", NSStringFromClass([thumb class]));
 		XCTAssertTrue([thumb.url isEqualToString:@"http://localhost/43247328927343"], @"url doesn't match");
-		XCTAssertTrue(thumb.x.integerValue == 576, @"x doesn't match");
-		XCTAssertTrue(thumb.y.integerValue == 344, @"y doesn't match");
+		XCTAssertTrue(thumb.x == 576.0f, @"x doesn't match");
+		XCTAssertTrue(thumb.y == 344.0f, @"y doesn't match");
 	}
 
 	for (NSString *like in entry.likes)

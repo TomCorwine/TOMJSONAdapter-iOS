@@ -21,48 +21,49 @@
 {
 	return @{
 		@"eid": @{
-			kTOMJSONAdapterKeyForIdentify: @YES,
+			//kTOMJSONAdapterKeyForIdentify: @YES,
       kTOMJSONAdapterKeyForMap: @"entryID",
-			kTOMJSONAdapterKeyForType: [NSString class]
+			//kTOMJSONAdapterKeyForType: [NSString class]
 			},
 		@"created_at": @{
 			kTOMJSONAdapterKeyForRequired: @NO,
 			kTOMJSONAdapterKeyForMap: @"createdAt",
-			kTOMJSONAdapterKeyForType: [NSDate class],
+			//kTOMJSONAdapterKeyForType: [NSDate class],
       kTOMJSONAdapterKeyForDateFormat: @"yyyy-MM-dd'T'HH:mm:ss'Z'"
 			},
 		@"thumbs": @{
-			kTOMJSONAdapterKeyForType: [NSArray class],
+			//kTOMJSONAdapterKeyForType: [NSArray class],
       kTOMJSONAdapterKeyForArrayContents: [TOMThumb class]
 			},
 		@"comments": @{
-			kTOMJSONAdapterKeyForType: [NSArray class],
+			//kTOMJSONAdapterKeyForType: [NSArray class],
       kTOMJSONAdapterKeyForArrayContents: [TOMComment class]
 			},
 		@"geo": @{
 			kTOMJSONAdapterKeyForRequired: @NO,
-      kTOMJSONAdapterKeyForType: [NSDictionary class]
+      //kTOMJSONAdapterKeyForType: [NSDictionary class]
 			},
 		@"owner": @{
-			kTOMJSONAdapterKeyForType: [NSString class],
+			//kTOMJSONAdapterKeyForType: [NSString class],
 			},
 		@"likes": @{
-			kTOMJSONAdapterKeyForType: [NSArray class],
+			//kTOMJSONAdapterKeyForType: [NSArray class],
       kTOMJSONAdapterKeyForArrayContents: [NSString class]
 			},
 		@"views": @{
-			kTOMJSONAdapterKeyForType: [NSArray class],
+			//kTOMJSONAdapterKeyForType: [NSArray class],
       kTOMJSONAdapterKeyForArrayContents: [NSString class]
 			},
 		@"type": @{
 			kTOMJSONAdapterKeyForRequired: @NO,
-			kTOMJSONAdapterKeyForType: [NSNumber class]
+			//kTOMJSONAdapterKeyForType: [NSNumber class]
 			},
-        @"geo.coordinates": @{
-                kTOMJSONAdapterKeyForMap: @"coordinates",
-                kTOMJSONAdapterKeyForRequired: @NO,
-                kTOMJSONAdapterKeyForType: [NSArray class]
-                }
+    @"enabled": @{},
+    @"geo.coordinates": @{
+      kTOMJSONAdapterKeyForMap: @"coordinates",
+      kTOMJSONAdapterKeyForRequired: @NO,
+      kTOMJSONAdapterKeyForType: [NSArray class]
+    }
 	};
 }
 

@@ -7,6 +7,8 @@
 
 #import "TOMJSONAdapter.h"
 
+#import <objc/runtime.h>
+
 @implementation TOMJSONAdapterBool
 // Dummy class to type BOOLEAN
 @end
@@ -120,7 +122,8 @@ NSString *const kTOMJSONAdapterKeyForDateFormat = @"kTOMJSONAdapterKeyForDateFor
 		{
 			NSString *dateFormat = validationDictionary[kTOMJSONAdapterKeyForDateFormat];
 			NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-			dateFormatter.timeZone = [NSTimeZone timeZoneForSecondsFromGMT:0];
+			dateFormatter.timeZone = [NSTimeZone timeZoneForSecondsFromGMT:0]; // TODO: Implement time zone info
+      dateFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
 			dateFormatter.dateFormat = dateFormat;
 			object = [dateFormatter dateFromString:object];
 		}
@@ -149,7 +152,7 @@ NSString *const kTOMJSONAdapterKeyForDateFormat = @"kTOMJSONAdapterKeyForDateFor
       NSNumber *number = object;
       if (number.boolValue != YES && number.boolValue != NO)
       {
-        [self createErrorWithType:kTOMJSONAdapterObjectFailedValidation additionalInfo:@"Expecting a NSNumber that's a BOOL"];
+        [self createErrorWithType:kTOMJSONAdapterObjectFailedValidation additionalInfo:@"Expecting a NSNumber that represents a BOOL value."];
 
         object = nil;
       }
@@ -268,9 +271,70 @@ NSString *const kTOMJSONAdapterKeyForDateFormat = @"kTOMJSONAdapterKeyForDateFor
 			continue; // Property doesn't exist or is nil.
     }
 
-		value = [self objectFromObject:value validationDictionary:propertyValidationDictionary];
 
-		NSString *accessorKey = (map ?: key); // Map to accessor.
+
+    NSString *accessorKey = (map ?: key); // Map to accessor.
+
+
+    NSString *selectorString = accessorKey;
+
+
+    unsigned int outCount;
+
+    objc_property_t *properties = class_copyPropertyList([object class], &outCount);
+
+    for (int i = 0; i < outCount; i++)
+    {
+      objc_property_t property = properties[i];
+
+      NSString *propertyName = [NSString stringWithUTF8String:property_getName(property)];
+
+      if (NO == [selectorString isEqualToString:propertyName]) {
+        continue;
+      }
+
+      NSLog(@"PropertyName: %@", propertyName);
+
+      const char *type = property_getAttributes(property);
+
+      NSString *typeString = [NSString stringWithUTF8String:type];
+      NSArray *attributes = [typeString componentsSeparatedByString:@","];
+      NSString *typeAttribute = [attributes objectAtIndex:0];
+      NSString *propertyType = [typeAttribute substringFromIndex:1];
+      const char *rawPropertyType = [propertyType UTF8String];
+
+      if (strcmp(rawPropertyType, @encode(float)) == 0) {
+        [object setValue:value forKey:accessorKey];
+      } else if (strcmp(rawPropertyType, @encode(int)) == 0) {
+        [object setValue:value forKey:accessorKey];
+      } else if (strcmp(rawPropertyType, @encode(id)) == 0) {
+        //it's some sort of object
+      } else if (strcmp(rawPropertyType, @encode(BOOL)) == 0) {
+        [object setValue:value forKey:accessorKey];
+      } else {
+        // According to Apples Documentation you can determine the corresponding encoding values
+      }
+
+      if ([propertyType hasPrefix:@"@"])
+      {
+        NSString *typeClassName = [typeAttribute substringWithRange:NSMakeRange(3, [typeAttribute length]-4)];  //turns @"NSDate" into NSDate
+        Class typeClass = NSClassFromString(typeClassName);
+        if (typeClass != nil) {
+          // Here is the corresponding class even for nil values
+          NSMutableDictionary *mutableDictionary = propertyValidationDictionary.mutableCopy;
+          mutableDictionary[kTOMJSONAdapterKeyForType] = typeClass;
+          propertyValidationDictionary = mutableDictionary.copy;
+        }
+
+        value = [self objectFromObject:value validationDictionary:propertyValidationDictionary];
+      }
+
+      break;
+    }
+
+    // TODO: Take a look here and see if we can incorporate read-only and customer setter check.
+    // https://developer.apple.com/library/mac/documentation/Cocoa/Conceptual/ObjCRuntimeGuide/Articles/ocrtPropertyIntrospection.html#//apple_ref/doc/uid/TP40008048-CH101-SW1
+
 		[object setValue:value forKey:accessorKey];
 	}
 

@@ -21,7 +21,8 @@ typedef enum {
 @property (nonatomic, strong) NSArray *comments;
 @property (nonatomic, strong) NSArray *likes;
 @property (nonatomic, strong) NSArray *views;
-@property (nonatomic, strong) NSNumber *type;
+@property (nonatomic) int type;
+@property (nonatomic, getter=isEnabled) BOOL enabled;
 @property (nonatomic, strong) NSDate *createdAt;
 
 @property (nonatomic, strong) NSArray *coordinates;

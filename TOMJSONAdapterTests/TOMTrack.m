@@ -20,26 +20,26 @@
 		@"tid": @{
 			kTOMJSONAdapterKeyForIdentify: @YES,
 			kTOMJSONAdapterKeyForMap: @"trackID",
-			kTOMJSONAdapterKeyForType: [NSString class]
+			//kTOMJSONAdapterKeyForType: [NSString class]
 			},
 		@"name": @{
-			kTOMJSONAdapterKeyForType: [NSString class]
+			//kTOMJSONAdapterKeyForType: [NSString class]
 			},
 		@"owner": @{
-			kTOMJSONAdapterKeyForType: [NSString class],
+			//kTOMJSONAdapterKeyForType: [NSString class],
 			},
 		@"entries": @{
-			kTOMJSONAdapterKeyForType: [NSArray class],
+			//kTOMJSONAdapterKeyForType: [NSArray class],
       kTOMJSONAdapterKeyForArrayContents: [TOMEntry class]
 			},
 		@"members": @{
-			kTOMJSONAdapterKeyForType: [NSArray class],
+			//kTOMJSONAdapterKeyForType: [NSArray class],
       kTOMJSONAdapterKeyForArrayContents: [TOMUser class]
 			},
 		@"public": @{
 			kTOMJSONAdapterKeyForRequired: @NO,
-			kTOMJSONAdapterKeyForMap: @"setIsPublic",
-			kTOMJSONAdapterKeyForType: [TOMJSONAdapterBool class]
+			kTOMJSONAdapterKeyForMap: @"isPublic",
+			//kTOMJSONAdapterKeyForType: [TOMJSONAdapterBool class]
 			}
 	};
 }

@@ -14,6 +14,6 @@
 @property (strong) NSString *owner;
 @property (strong) NSArray *entries;
 @property (strong) NSArray *members;
-@property (strong) NSNumber *isPublic;
+@property (nonatomic) BOOL isPublic;
 
 @end

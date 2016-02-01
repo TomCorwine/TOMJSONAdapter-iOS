@@ -10,7 +10,7 @@
 @interface TOMThumb : NSObject <TOMJSONAdapterProtocol>
 
 @property (strong) NSString *url;
-@property (strong) NSNumber *x;
-@property (strong) NSNumber *y;
+@property (nonatomic) float x;
+@property (nonatomic) float y;
 
 @end

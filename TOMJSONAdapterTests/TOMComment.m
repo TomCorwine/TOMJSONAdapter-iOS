@@ -17,14 +17,14 @@
 		@"cid": @{
 			kTOMJSONAdapterKeyForIdentify: @YES,
 			kTOMJSONAdapterKeyForMap: @"commentID",
-			kTOMJSONAdapterKeyForType: [NSString class]
+			//kTOMJSONAdapterKeyForType: [NSString class]
 			},
 		@"message": @{
 			kTOMJSONAdapterKeyForMap: @"text",
-			kTOMJSONAdapterKeyForType: [NSString class]
+			//kTOMJSONAdapterKeyForType: [NSString class]
 			},
 		@"owner": @{
-			kTOMJSONAdapterKeyForType: [NSString class]
+			//kTOMJSONAdapterKeyForType: [NSString class]
 			}
 	};
 }

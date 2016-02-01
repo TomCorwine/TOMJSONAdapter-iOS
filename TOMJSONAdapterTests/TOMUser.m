@@ -17,23 +17,23 @@
 {
 	return @{
 		@"uid": @{
-			kTOMJSONAdapterKeyForIdentify: @YES,
+			//kTOMJSONAdapterKeyForIdentify: @YES,
 			kTOMJSONAdapterKeyForMap: @"userID",
-			kTOMJSONAdapterKeyForType: [NSString class]
+			//kTOMJSONAdapterKeyForType: [NSString class]
 			},
 		@"name": @{
-			kTOMJSONAdapterKeyForType: [NSString class]
+			//kTOMJSONAdapterKeyForType: [NSString class]
 			},
 		@"country": @{
-			kTOMJSONAdapterKeyForType: [NSString class]
+			//kTOMJSONAdapterKeyForType: [NSString class]
 			},
 		@"tz": @{
 			kTOMJSONAdapterKeyForMap: @"timeZone",
-			kTOMJSONAdapterKeyForType: [NSString class]
+			//kTOMJSONAdapterKeyForType: [NSString class]
 			},
 		@"thumbs": @{
 			kTOMJSONAdapterKeyForRequired: @NO,
-			kTOMJSONAdapterKeyForType: [NSArray class],
+			//kTOMJSONAdapterKeyForType: [NSArray class],
       kTOMJSONAdapterKeyForArrayContents: [TOMThumb class]
 			}
 	};
