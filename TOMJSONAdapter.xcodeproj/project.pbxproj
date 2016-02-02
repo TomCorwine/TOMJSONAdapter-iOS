@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		F15DACF11C606F8600A314B3 /* NSObject+Properties.m in Sources */ = {isa = PBXBuildFile; fileRef = F15DACF01C606F8600A314B3 /* NSObject+Properties.m */; };
 		F1840A2616CDB5F70093D758 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F1840A2516CDB5F70093D758 /* Foundation.framework */; };
 		F1840A2B16CDB5F70093D758 /* TOMJSONAdapter.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = F1840A2A16CDB5F70093D758 /* TOMJSONAdapter.h */; };
 		F1840A2D16CDB5F70093D758 /* TOMJSONAdapter.m in Sources */ = {isa = PBXBuildFile; fileRef = F1840A2C16CDB5F70093D758 /* TOMJSONAdapter.m */; };
@@ -44,6 +45,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		F15DACEF1C606F8600A314B3 /* NSObject+Properties.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+Properties.h"; sourceTree = "<group>"; };
+		F15DACF01C606F8600A314B3 /* NSObject+Properties.m */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 2; lastKnownFileType = sourcecode.c.objc; path = "NSObject+Properties.m"; sourceTree = "<group>"; tabWidth = 2; };
 		F1840A2216CDB5F70093D758 /* libTOMJSONAdapter.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libTOMJSONAdapter.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		F1840A2516CDB5F70093D758 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		F1840A2A16CDB5F70093D758 /* TOMJSONAdapter.h */ = {isa = PBXFileReference; indentWidth = 2; lastKnownFileType = sourcecode.c.h; path = TOMJSONAdapter.h; sourceTree = "<group>"; tabWidth = 2; };
@@ -116,6 +119,8 @@
 			children = (
 				F1840A2A16CDB5F70093D758 /* TOMJSONAdapter.h */,
 				F1840A2C16CDB5F70093D758 /* TOMJSONAdapter.m */,
+				F15DACEF1C606F8600A314B3 /* NSObject+Properties.h */,
+				F15DACF01C606F8600A314B3 /* NSObject+Properties.m */,
 			);
 			path = TOMJSONAdapter;
 			sourceTree = "<group>";
@@ -228,6 +233,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F15DACF11C606F8600A314B3 /* NSObject+Properties.m in Sources */,
 				F1840A2D16CDB5F70093D758 /* TOMJSONAdapter.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

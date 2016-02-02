@@ -7,7 +7,7 @@
 
 #import "TOMJSONAdapter.h"
 
-#import <objc/runtime.h>
+#import "NSObject+Properties.h"
 
 @implementation TOMJSONAdapterBool
 // Dummy class to type BOOLEAN
@@ -222,7 +222,7 @@ NSString *const kTOMJSONAdapterKeyForDateFormat = @"kTOMJSONAdapterKeyForDateFor
     NSDictionary *propertyValidationDictionary = validationDictionary[key];
     NSString *map = propertyValidationDictionary[kTOMJSONAdapterKeyForMap];
 
-    if (NSNotFound != [key rangeOfString:@"."].location) // key contains a period
+    if (NSNotFound != [key rangeOfString:@"."].location) // YES if key contains a period
     {
       NSArray *keys = [key componentsSeparatedByString:@"."];
 
@@ -264,72 +264,52 @@ NSString *const kTOMJSONAdapterKeyForDateFormat = @"kTOMJSONAdapterKeyForDateFor
 			NSString *string = [NSString stringWithFormat:@"Missing required parameter %@", key];
       [self createErrorWithType:kTOMJSONAdapterObjectFailedValidation additionalInfo:string];
 
-			return nil;
+      continue;
 		}
 
     if (nil == value) {
 			continue; // Property doesn't exist or is nil.
     }
 
-
-
     NSString *accessorKey = (map ?: key); // Map to accessor.
+    NSObjectReturnType returnType = [[object class] returnTypeForProperty:accessorKey];
 
-
-    NSString *selectorString = accessorKey;
-
-
-    unsigned int outCount;
-
-    objc_property_t *properties = class_copyPropertyList([object class], &outCount);
-
-    for (int i = 0; i < outCount; i++)
+    switch (returnType)
     {
-      objc_property_t property = properties[i];
-
-      NSString *propertyName = [NSString stringWithUTF8String:property_getName(property)];
-
-      if (NO == [selectorString isEqualToString:propertyName]) {
-        continue;
-      }
-
-      NSLog(@"PropertyName: %@", propertyName);
-
-      const char *type = property_getAttributes(property);
-
-      NSString *typeString = [NSString stringWithUTF8String:type];
-      NSArray *attributes = [typeString componentsSeparatedByString:@","];
-      NSString *typeAttribute = [attributes objectAtIndex:0];
-      NSString *propertyType = [typeAttribute substringFromIndex:1];
-      const char *rawPropertyType = [propertyType UTF8String];
-
-      if (strcmp(rawPropertyType, @encode(float)) == 0) {
-        [object setValue:value forKey:accessorKey];
-      } else if (strcmp(rawPropertyType, @encode(int)) == 0) {
-        [object setValue:value forKey:accessorKey];
-      } else if (strcmp(rawPropertyType, @encode(id)) == 0) {
-        //it's some sort of object
-      } else if (strcmp(rawPropertyType, @encode(BOOL)) == 0) {
-        [object setValue:value forKey:accessorKey];
-      } else {
-        // According to Apples Documentation you can determine the corresponding encoding values
-      }
-
-      if ([propertyType hasPrefix:@"@"])
+      case NSObjectReturnTypeUnknown:
+      case NSObjectReturnTypeID:
       {
-        NSString *typeClassName = [typeAttribute substringWithRange:NSMakeRange(3, [typeAttribute length]-4)];  //turns @"NSDate" into NSDate
-        Class typeClass = NSClassFromString(typeClassName);
-        if (typeClass != nil) {
-          // Here is the corresponding class even for nil values
-          NSMutableDictionary *mutableDictionary = propertyValidationDictionary.mutableCopy;
-          mutableDictionary[kTOMJSONAdapterKeyForType] = typeClass;
-          propertyValidationDictionary = mutableDictionary.copy;
-        }
+        continue;
+        break;
+      }
+      case NSObjectReturnTypeFloat:
+      case NSObjectReturnTypeDouble:
+      {
+        // TODO: Validate
+        break;
+      }
+      case NSObjectReturnTypeInteger:
+      {
+        // TODO: Validate
+        break;
+      }
+      case NSObjectReturnTypeBOOL:
+      {
+        // TODO: Validate
+        break;
+      }
+      case NSObjectReturnTypeNSString:
+      case NSObjectReturnTypeNSArray:
+      case NSObjectReturnTypeNSNumber:
+      case NSObjectReturnTypeNSDictionary:
+      {
+        NSMutableDictionary *mutableDictionary = propertyValidationDictionary.mutableCopy;
+        mutableDictionary[kTOMJSONAdapterKeyForType] = [NSObject classNameForReturnType:returnType];
+        propertyValidationDictionary = mutableDictionary.copy;
 
         value = [self objectFromObject:value validationDictionary:propertyValidationDictionary];
+        break;
       }
-
-      break;
     }
 
     // TODO: Take a look here and see if we can incorporate read-only and customer setter check.
