@@ -9,8 +9,8 @@
 
 @interface TOMComment : NSObject <TOMJSONAdapterProtocol>
 
-@property (strong) NSString *commentID;
-@property (strong) NSString *text;
-@property (strong) NSString *owner;
+@property (nonatomic, strong) NSString *commentID;
+@property (nonatomic, strong) NSString *text;
+@property (nonatomic, strong) NSString *owner;
 
 @end

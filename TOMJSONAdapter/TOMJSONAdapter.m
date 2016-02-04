@@ -9,10 +9,6 @@
 
 #import "NSObject+Properties.h"
 
-@implementation TOMJSONAdapterBool
-// Dummy class to type BOOLEAN
-@end
-
 const NSInteger kTOMJSONAdapterInvalidObjectDetected = 100;
 const NSInteger kTOMJSONAdapterObjectFailedValidation = 101;
 const NSInteger kTOMJSONAdapterInvalidJSON = 102;
@@ -145,25 +141,6 @@ NSString *const kTOMJSONAdapterKeyForDateFormat = @"kTOMJSONAdapterKeyForDateFor
 			object = nil;
 		}
   }
-  else if ([classType isEqual:[TOMJSONAdapterBool class]])
-  {
-    if ([object isKindOfClass:[NSNumber class]])
-    {
-      NSNumber *number = object;
-      if (number.boolValue != YES && number.boolValue != NO)
-      {
-        [self createErrorWithType:kTOMJSONAdapterObjectFailedValidation additionalInfo:@"Expecting a NSNumber that represents a BOOL value."];
-
-        object = nil;
-      }
-    }
-    else
-    {
-      NSString *errorDescription = [NSString stringWithFormat:@"Expecting TOMJSONAdapterBool, got %@", NSStringFromClass([object class])];
-      [self createErrorWithType:kTOMJSONAdapterObjectFailedValidation additionalInfo:errorDescription];
-      object = nil;
-    }
-  }
   else if ([object isKindOfClass:[NSDictionary class]])
   {
     object = [self objectOfType:classType fromDictionary:object];
@@ -276,8 +253,8 @@ NSString *const kTOMJSONAdapterKeyForDateFormat = @"kTOMJSONAdapterKeyForDateFor
 
     switch (returnType)
     {
+      case NSObjectReturnTypeNotFound:
       case NSObjectReturnTypeUnknown:
-      case NSObjectReturnTypeID:
       {
         continue;
         break;
@@ -298,13 +275,10 @@ NSString *const kTOMJSONAdapterKeyForDateFormat = @"kTOMJSONAdapterKeyForDateFor
         // TODO: Validate
         break;
       }
-      case NSObjectReturnTypeNSString:
-      case NSObjectReturnTypeNSArray:
-      case NSObjectReturnTypeNSNumber:
-      case NSObjectReturnTypeNSDictionary:
+      case NSObjectReturnTypeID:
       {
         NSMutableDictionary *mutableDictionary = propertyValidationDictionary.mutableCopy;
-        mutableDictionary[kTOMJSONAdapterKeyForType] = [NSObject classNameForReturnType:returnType];
+        mutableDictionary[kTOMJSONAdapterKeyForType] = [NSObject returnTypeClassForProperty:accessorKey];
         propertyValidationDictionary = mutableDictionary.copy;
 
         value = [self objectFromObject:value validationDictionary:propertyValidationDictionary];
@@ -322,39 +296,39 @@ NSString *const kTOMJSONAdapterKeyForDateFormat = @"kTOMJSONAdapterKeyForDateFor
 }
 
 #pragma mark - Class Identification
-/*
+
 - (Class)classForUniqueIdentifiers:(NSArray *)array
 {
-	NSArray *classesToConsiderArray = (self.classesToConsider ?: kTOMJSONAdapterDefaultClassesToConsiderArray);
-	NSAssert(classesToConsiderArray, [[self class] classesToConsiderErrorForMessage:@"Must be called before attempting to parse JSON."]);
+  for (Class<TOMJSONAdapterProtocol> class in @[])
+  {
+    BOOL conforms = [(NSObject *)class conformsToProtocol:@protocol(TOMJSONAdapterProtocol)];
+    NSAssert(conforms, [[self class] errorMessageWithClassNameForErrorMessage:@"Classes must conform to the TRKJSONAdapterProtocol protocol."]);
 
-	for (Class<TOMJSONAdapterProtocol> class in classesToConsiderArray)
-	{
-		NSAssert([(NSObject *)class conformsToProtocol:@protocol(TOMJSONAdapterProtocol)], [[self class] errorMessageWithClassNameForErrorMessage:@"Classes must conform to the TRKJSONAdapterProtocol protocol."]);
-		NSMutableArray *mutableArray = @[].mutableCopy;
-		NSDictionary *validationDictionary = [self validationDictionaryForClass:class];
+    NSMutableArray *mutableArray = @[].mutableCopy;
+    NSDictionary *validationDictionary = [self validationDictionaryForClass:class];
 
-		for (NSString *key in validationDictionary.allKeys)
-		{
-			NSDictionary *propertyValidationDictionary = validationDictionary[key];
-			NSNumber *identify = propertyValidationDictionary[kTOMJSONAdapterKeyForIdentify];
+    for (NSString *key in validationDictionary.allKeys)
+    {
+      NSDictionary *propertyValidationDictionary = validationDictionary[key];
+      NSNumber *identify = propertyValidationDictionary[kTOMJSONAdapterKeyForIdentify];
+
       if (identify.boolValue) {
-				[mutableArray addObject:key];
+        [mutableArray addObject:key];
       }
-		}
+    }
 
     NSSet *uniqueIdentifiersSet = [NSSet setWithArray:mutableArray];
-		NSSet *objectSet = [NSSet setWithArray:array];
+    NSSet *objectSet = [NSSet setWithArray:array];
 
     if ([uniqueIdentifiersSet isSubsetOfSet:objectSet]) {
-			return class;
+      return class;
     }
-	}
+  }
 
-	// If none of the kClassesToConsiderStringsArray match for unique identifier, just create a NSDictionary.
-	return [NSDictionary class];
+  // If none of the kClassesToConsiderStringsArray match for unique identifier, just create a NSDictionary.
+  return [NSDictionary class];
 }
-*/
+
 #pragma mark - Validation
 
 - (NSDictionary *)validationDictionaryForClass:(Class)class
@@ -369,7 +343,13 @@ NSString *const kTOMJSONAdapterKeyForDateFormat = @"kTOMJSONAdapterKeyForDateFor
 	if (nil == dictionary)
 	{
 		dictionary = [class JSONAdapterSchema];
-		NSArray *keyValidationArray = @[kTOMJSONAdapterKeyForIdentify, kTOMJSONAdapterKeyForMap, kTOMJSONAdapterKeyForRequired, kTOMJSONAdapterKeyForType, kTOMJSONAdapterKeyForArrayContents, kTOMJSONAdapterKeyForDateFormat];
+		NSArray *keyValidationArray = @[
+                                    kTOMJSONAdapterKeyForMap,
+                                    kTOMJSONAdapterKeyForRequired,
+                                    kTOMJSONAdapterKeyForType,
+                                    kTOMJSONAdapterKeyForArrayContents,
+                                    kTOMJSONAdapterKeyForDateFormat
+                                    ];
 
 		for (NSString *objectKey in dictionary.allKeys)
 		{
@@ -394,7 +374,7 @@ NSString *const kTOMJSONAdapterKeyForDateFormat = @"kTOMJSONAdapterKeyForDateFor
           NSString *string = [NSString stringWithFormat:@"Validation value for key %@ in class %@ is not a NSString.", key, NSStringFromClass(class)];
           NSAssert([value isKindOfClass:[NSString class]], [[self class] errorMessageWithClassNameForErrorMessage:string]);
         }
-        else if ([key isEqualToString:kTOMJSONAdapterKeyForIdentify] || [key isEqualToString:kTOMJSONAdapterKeyForRequired])
+        else if ([key isEqualToString:kTOMJSONAdapterKeyForRequired])
         {
           NSString *string = [NSString stringWithFormat:@"Validation value for property %@ and key %@ in class %@ is not a NSNumber.", objectKey, key, NSStringFromClass(class)];
           NSAssert([value isKindOfClass:[NSNumber class]], [[self class] errorMessageWithClassNameForErrorMessage:string]);

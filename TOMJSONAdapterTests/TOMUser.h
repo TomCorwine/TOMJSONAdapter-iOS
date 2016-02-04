@@ -9,10 +9,10 @@
 
 @interface TOMUser : NSObject <TOMJSONAdapterProtocol>
 
-@property (strong) NSString *userID;
-@property (strong) NSString *name;
-@property (strong) NSString *country;
-@property (strong) NSString *timeZone;
-@property (strong) NSArray *thumbs;
+@property (nonatomic, strong) NSString *userID;
+@property (nonatomic, strong) NSString *name;
+@property (nonatomic, strong) NSString *country;
+@property (nonatomic, strong) NSString *timeZone;
+@property (nonatomic, strong) NSArray *thumbs;
 
 @end

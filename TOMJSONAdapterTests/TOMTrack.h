@@ -9,11 +9,11 @@
 
 @interface TOMTrack : NSObject <TOMJSONAdapterProtocol>
 
-@property (strong) NSString *trackID;
-@property (strong) NSString *name;
-@property (strong) NSString *owner;
-@property (strong) NSArray *entries;
-@property (strong) NSArray *members;
+@property (nonatomic, strong) NSString *trackID;
+@property (nonatomic, strong) NSString *name;
+@property (nonatomic, strong) NSString *owner;
+@property (nonatomic, strong) NSArray *entries;
+@property (nonatomic, strong) NSArray *members;
 @property (nonatomic) BOOL isPublic;
 
 @end

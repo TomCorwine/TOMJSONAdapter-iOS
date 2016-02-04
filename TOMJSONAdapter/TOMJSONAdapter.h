@@ -12,10 +12,6 @@
 	#error TOMJSONAdapter requires iOS 5.0 or later
 #endif
 
-@interface TOMJSONAdapterBool : NSNumber
-// Dummy class to type BOOLEAN
-@end
-
 extern const NSInteger kTOMJSONAdapterInvalidObjectDetected;
 extern const NSInteger kTOMJSONAdapterObjectFailedValidation;
 extern const NSInteger kTOMJSONAdapterInvalidJSON;
