@@ -85,7 +85,7 @@
     const char *propertyName = name.UTF8String;
     const char *currentPropertyName = property_getName(property);
 
-    if (strcmp(propertyName, currentPropertyName)) {
+    if (0 == strcmp(propertyName, currentPropertyName)) {
       return property;
     }
   }
