@@ -57,6 +57,7 @@ NSString *const kTOMJSONAdapterKeyForDateFormat = @"kTOMJSONAdapterKeyForDateFor
 
     if (error) {
       [self.errors addObject:error];
+      return nil; // No point in continuing if JSON parsing failed.
     }
 	}
 
@@ -207,7 +208,8 @@ NSString *const kTOMJSONAdapterKeyForDateFormat = @"kTOMJSONAdapterKeyForDateFor
       {
         NSString *string = [NSString stringWithFormat:@"A map key is required with dot notation for key %@.", key];
         [self createErrorWithType:kTOMJSONAdapterObjectFailedValidation additionalInfo:string];
-        return nil;
+
+        continue;
       }
 
       NSDictionary *newDictionary = dictionary;
@@ -223,7 +225,7 @@ NSString *const kTOMJSONAdapterKeyForDateFormat = @"kTOMJSONAdapterKeyForDateFor
           NSString *string = [NSString stringWithFormat:@"Unable to find subkey: %@ on %@", subKey, key];
           [self createErrorWithType:kTOMJSONAdapterObjectFailedValidation additionalInfo:string];
 
-          return nil;
+          continue;
         }
       }
 
@@ -256,6 +258,9 @@ NSString *const kTOMJSONAdapterKeyForDateFormat = @"kTOMJSONAdapterKeyForDateFor
       case NSObjectReturnTypeNotFound:
       case NSObjectReturnTypeUnknown:
       {
+        NSString *string = @"Unknown return type.";
+        [self createErrorWithType:kTOMJSONAdapterObjectFailedValidation additionalInfo:string];
+
         continue;
         break;
       }
