@@ -23,6 +23,10 @@ extern NSString *const kTOMJSONAdapterKeyForType;
 extern NSString *const kTOMJSONAdapterKeyForArrayContents;
 extern NSString *const kTOMJSONAdapterKeyForDateFormat;
 
+// Dummy class for specifiying a BOOL
+@interface TOMJSONAdapterBool : NSNumber
+@end
+
 @protocol TOMJSONAdapterProtocol <NSObject>
 /*
  Format for JSONAdapterSchema dictionary:

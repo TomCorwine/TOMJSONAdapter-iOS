@@ -20,6 +20,9 @@ NSString *const kTOMJSONAdapterKeyForType = @"kTOMJSONAdapterKeyForType";
 NSString *const kTOMJSONAdapterKeyForArrayContents = @"kTOMJSONAdapterKeyForArrayContents";
 NSString *const kTOMJSONAdapterKeyForDateFormat = @"kTOMJSONAdapterKeyForDateFormat";
 
+@implementation TOMJSONAdapterBool
+@end
+
 @interface TOMJSONAdapter ()
 @property (strong) NSMutableDictionary *objectValidationDictionary;
 @property (nonatomic, strong) NSMutableArray *errors;
@@ -142,10 +145,14 @@ NSString *const kTOMJSONAdapterKeyForDateFormat = @"kTOMJSONAdapterKeyForDateFor
 			object = nil;
 		}
   }
+    else if ([classType isEqual:[TOMJSONAdapterBool class]])
+    {
+    }
   else if ([object isKindOfClass:[NSDictionary class]])
   {
     object = [self objectOfType:classType fromDictionary:object];
 
+      // This will never happen. Need to re-implement class validation.
     if (NO == [object isKindOfClass:classType])
     {
       NSString *errorDescription = [NSString stringWithFormat:@"Expecting %@, got %@", classType, NSStringFromClass([object class])];
@@ -301,7 +308,7 @@ NSString *const kTOMJSONAdapterKeyForDateFormat = @"kTOMJSONAdapterKeyForDateFor
 }
 
 #pragma mark - Class Identification
-
+/*
 - (Class)classForUniqueIdentifiers:(NSArray *)array
 {
   for (Class<TOMJSONAdapterProtocol> class in @[])
@@ -333,7 +340,7 @@ NSString *const kTOMJSONAdapterKeyForDateFormat = @"kTOMJSONAdapterKeyForDateFor
   // If none of the kClassesToConsiderStringsArray match for unique identifier, just create a NSDictionary.
   return [NSDictionary class];
 }
-
+*/
 #pragma mark - Validation
 
 - (NSDictionary *)validationDictionaryForClass:(Class)class
