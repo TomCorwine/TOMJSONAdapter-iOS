@@ -7,8 +7,6 @@
 
 #import "TOMJSONAdapter.h"
 
-#import "NSObject+Properties.h"
-
 const NSInteger kTOMJSONAdapterInvalidObjectDetected = 100;
 const NSInteger kTOMJSONAdapterObjectFailedValidation = 101;
 const NSInteger kTOMJSONAdapterInvalidJSON = 102;
@@ -371,7 +369,7 @@ NSString *const kTOMJSONAdapterKeyForDateFormat = @"kTOMJSONAdapterKeyForDateFor
 			{
         NSString *items = [keyValidationArray componentsJoinedByString:@", "];
         NSString *errorDescription = [NSString stringWithFormat:@"Validation key for class %@ is invalid. Key was %@, expecting one of %@.", NSStringFromClass(class), key, items];
-        NSAssert([keyValidationArray containsObject:key], [[self class] errorMessageWithClassNameForErrorMessage:errorDescription]);
+        NSAssert([keyValidationArray containsObject:key], [self errorMessageWithClassNameForErrorMessage:errorDescription]);
         id value = objectDictionary[key];
 
         if ([key isEqualToString:kTOMJSONAdapterKeyForType] || [key isEqualToString:kTOMJSONAdapterKeyForArrayContents])

@@ -7,6 +7,8 @@
 
 #import "TOMComment.h"
 
+#import "TOMJSONAdapter.h"
+
 @implementation TOMComment
 
 #pragma mark - TOMJSONAdapterProtocol
@@ -15,7 +17,7 @@
 {
 	return @{
 		@"cid": @{
-			kTOMJSONAdapterKeyForIdentify: @YES,
+                //kTOMJSONAdapterKeyForIdentify: @YES,
 			kTOMJSONAdapterKeyForMap: @"commentID",
 			//kTOMJSONAdapterKeyForType: [NSString class]
 			},

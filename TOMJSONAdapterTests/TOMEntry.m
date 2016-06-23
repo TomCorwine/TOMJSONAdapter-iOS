@@ -13,6 +13,8 @@
 #import "TOMThumb.h"
 #import "TOMComment.h"
 
+#import "TOMJSONAdapter.h"
+
 @implementation TOMEntry
 
 #pragma mark - TOMJSONAdapterProtocol

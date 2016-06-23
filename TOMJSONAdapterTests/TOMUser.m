@@ -9,6 +9,8 @@
 
 #import "TOMThumb.h"
 
+#import "TOMJSONAdapter.h"
+
 @implementation TOMUser
 
 #pragma mark - TOMJSONAdapterProtocol

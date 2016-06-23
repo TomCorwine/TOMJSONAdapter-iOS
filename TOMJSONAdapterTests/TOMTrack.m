@@ -10,6 +10,8 @@
 #import "TOMUser.h"
 #import "TOMEntry.h"
 
+#import "TOMJSONAdapter.h"
+
 @implementation TOMTrack
 
 #pragma mark - TOMJSONAdapterProtocol

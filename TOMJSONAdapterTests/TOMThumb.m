@@ -7,6 +7,8 @@
 
 #import "TOMThumb.h"
 
+#import "TOMJSONAdapter.h"
+
 @implementation TOMThumb
 
 + (NSDictionary *)JSONAdapterSchema
