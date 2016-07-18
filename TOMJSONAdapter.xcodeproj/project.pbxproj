@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		F15DACF11C606F8600A314B3 /* NSObject+Properties.m in Sources */ = {isa = PBXBuildFile; fileRef = F15DACF01C606F8600A314B3 /* NSObject+Properties.m */; };
 		F1840A2616CDB5F70093D758 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F1840A2516CDB5F70093D758 /* Foundation.framework */; };
 		F1840A2B16CDB5F70093D758 /* TOMJSONAdapter.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = F1840A2A16CDB5F70093D758 /* TOMJSONAdapter.h */; };
 		F1840A2D16CDB5F70093D758 /* TOMJSONAdapter.m in Sources */ = {isa = PBXBuildFile; fileRef = F1840A2C16CDB5F70093D758 /* TOMJSONAdapter.m */; };
@@ -233,7 +232,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F15DACF11C606F8600A314B3 /* NSObject+Properties.m in Sources */,
 				F1840A2D16CDB5F70093D758 /* TOMJSONAdapter.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

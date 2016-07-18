@@ -63,10 +63,10 @@
 
   NSString *typeString = [NSString stringWithUTF8String:type];
   NSArray *attributes = [typeString componentsSeparatedByString:@","];
-  NSString *typeAttribute = [attributes objectAtIndex:0];
-  NSString *propertyType = [typeAttribute substringFromIndex:1];
+  NSString *typeAttribute = attributes.firstObject;
+  //NSString *propertyType = [typeAttribute substringFromIndex:1];
 
-  propertyType = [propertyType substringFromIndex:1]; // Remove @ from front
+  //propertyType = [propertyType substringFromIndex:1]; // Remove @ from front
   NSCharacterSet *characterSet = [NSCharacterSet characterSetWithCharactersInString:@"\""]; // Remove surrounding quotes
   NSString *typeClassName = [typeAttribute stringByTrimmingCharactersInSet:characterSet];
 

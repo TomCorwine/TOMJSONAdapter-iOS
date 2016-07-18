@@ -8,8 +8,6 @@
 #import <Foundation/Foundation.h>
 #import <Availability.h>
 
-#import "NSObject+Properties.h"
-
 #if __IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_5_0
 	#error TOMJSONAdapter requires iOS 5.0 or later
 #endif

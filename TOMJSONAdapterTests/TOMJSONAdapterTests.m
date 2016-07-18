@@ -8,6 +8,7 @@
 #import <XCTest/XCTest.h>
 
 #import "TOMJSONAdapter.h"
+
 #import "TOMTrack.h"
 #import "TOMEntry.h"
 #import "TOMUser.h"
@@ -38,10 +39,16 @@
     \"message\": \"Congrats!\", \
     \"owner\": \"50e5ecfe8768a1336c000019\"}";
 	TOMComment *comment = [self parseJson:json expectedClass:[TOMComment class]];
-	XCTAssertTrue([comment isKindOfClass:[TOMComment class]], @"Expecting a TOMComment, got %@.", NSStringFromClass([comment class]));
-	XCTAssertTrue([comment.commentID isEqualToString:@"511fe8718768a126bc000032"], @"commentID doesn't match");
-	XCTAssertTrue([comment.text isEqualToString:@"Congrats!"], @"text doesn't match");
-	XCTAssertTrue([comment.owner isEqualToString:@"50e5ecfe8768a1336c000019"], @"owner doesn't match");
+
+  BOOL isCorrectClass = [comment isKindOfClass:[TOMComment class]];
+  XCTAssertTrue(isCorrectClass, @"Expecting a TOMComment, got %@.", NSStringFromClass([comment class]));
+
+  if (isCorrectClass)
+  {
+    XCTAssertTrue([comment.commentID isEqualToString:@"511fe8718768a126bc000032"], @"commentID doesn't match");
+    XCTAssertTrue([comment.text isEqualToString:@"Congrats!"], @"text doesn't match");
+    XCTAssertTrue([comment.owner isEqualToString:@"50e5ecfe8768a1336c000019"], @"owner doesn't match");
+  }
 }
 
 - (void)test02User
@@ -51,10 +58,16 @@
     \"country\": \"US\", \
 	\"tz\": \"America/New_York\"}";
 	TOMUser *user = [self parseJson:json expectedClass:[TOMUser class]];
-	XCTAssertTrue([user isKindOfClass:[TOMUser class]], @"Expecting a TOMUser, got %@.", NSStringFromClass([user class]));
-	XCTAssertTrue([user.userID isEqualToString:@"511fe8718768a126bc000032"], @"userID doesn't match");
-	XCTAssertTrue([user.country isEqualToString:@"US"], @"country doesn't match");
-	XCTAssertTrue([user.timeZone isEqualToString:@"America/New_York"], @"timeZone doesn't match");
+
+  BOOL isCorrectClass = [user isKindOfClass:[TOMUser class]];
+  XCTAssertTrue(isCorrectClass, @"Expecting a TOMUser, got %@.", NSStringFromClass([user class]));
+
+  if (isCorrectClass)
+  {
+    XCTAssertTrue([user.userID isEqualToString:@"511fe8718768a126bc000032"], @"userID doesn't match");
+    XCTAssertTrue([user.country isEqualToString:@"US"], @"country doesn't match");
+    XCTAssertTrue([user.timeZone isEqualToString:@"America/New_York"], @"timeZone doesn't match");
+  }
 }
 
 - (void)test03Thumb
@@ -63,10 +76,16 @@
     \"x\": 576, \
     \"y\": 344}";
 	TOMThumb *thumb = [self parseJson:json expectedClass:[TOMThumb class]];
-	XCTAssertTrue([thumb isKindOfClass:[TOMThumb class]], @"Expecting a TOMThumb, got %@.", NSStringFromClass([thumb class]));
-	XCTAssertTrue([thumb.url isEqualToString:@"http://localhost/43247328927343"], @"url doesn't match");
-	XCTAssertTrue(thumb.x == 576.0f, @"x doesn't match");
-	XCTAssertTrue(thumb.y == 344.0f, @"y doesn't match");
+
+  BOOL isCorrectClass = [thumb isKindOfClass:[TOMThumb class]];
+  XCTAssertTrue(isCorrectClass, @"Expecting a TOMThumb, got %@.", NSStringFromClass([thumb class]));
+
+  if (isCorrectClass)
+  {
+    XCTAssertTrue([thumb.url isEqualToString:@"http://localhost/43247328927343"], @"url doesn't match");
+    XCTAssertTrue(thumb.x == 576.0f, @"x doesn't match");
+    XCTAssertTrue(thumb.y == 344.0f, @"y doesn't match");
+  }
 }
 
 - (void)test04Entry
@@ -91,8 +110,6 @@
 	XCTAssertTrue([entry isKindOfClass:[TOMEntry class]], @"Expecting a TOMEntry, got %@.", NSStringFromClass([entry class]));
 	XCTAssertTrue([entry.entryID isEqualToString:@"511fe8718768a126bc000031"], @"entryID doesn't match");
 	XCTAssertTrue([entry.owner isEqualToString:@"501fd8718768a126bc000001"], @"owner doesn't match");
-	//XCTAssertTrue([entry.createdAt isKindOfClass:[NSDate class]], @"Expecting a NSDate, got %@.", NSStringFromClass([entry.createdAt class]));
-	//XCTAssertTrue(entry.createdAt.timeIntervalSince1970, @"createdAt doesn't match");
 	XCTAssertTrue(entry.type == 1, @"type isn't 1");
   XCTAssertTrue(entry.enabled == YES, @"enabled isn't YES");
 	XCTAssertTrue([entry.geo isKindOfClass:[NSDictionary class]], @"Expecting a NSDictionary, got %@.", NSStringFromClass([entry.geo class]));
@@ -102,20 +119,36 @@
 	XCTAssertTrue([entry.views isKindOfClass:[NSArray class]], @"Expecting a NSArray, got %@.", NSStringFromClass([entry.views class]));
   XCTAssertTrue([entry.coordinates isKindOfClass:[NSArray class]], @"Expecting a NSArray, got %@.", NSStringFromClass([entry.coordinates class]));
 
+  BOOL isCorrectClass = [entry.createdAt isKindOfClass:[NSDate class]];
+  XCTAssertTrue(isCorrectClass, @"Expecting a NSDate, got %@.", NSStringFromClass([entry.createdAt class]));
+  if (isCorrectClass) {
+    XCTAssertTrue(entry.createdAt.timeIntervalSince1970, @"createdAt doesn't match");
+  }
+
 	for (TOMComment *comment in entry.comments)
 	{
-		XCTAssertTrue([comment isKindOfClass:[TOMComment class]], @"Expecting a TOMComment, got %@.", NSStringFromClass([comment class]));
-		XCTAssertTrue([comment.commentID isEqualToString:@"511fe8718768a126bc000032"], @"commentID doesn't match");
-		XCTAssertTrue([comment.text isEqualToString:@"Congrats!"], @"text doesn't match");
-		XCTAssertTrue([comment.owner isEqualToString:@"50e5ecfe8768a1336c000019"], @"owner doesn't match");
+    BOOL isCorrectClass = [comment isKindOfClass:[TOMComment class]];
+		XCTAssertTrue(isCorrectClass, @"Expecting a TOMComment, got %@.", NSStringFromClass([comment class]));
+
+    if (isCorrectClass)
+    {
+      XCTAssertTrue([comment.commentID isEqualToString:@"511fe8718768a126bc000032"], @"commentID doesn't match");
+      XCTAssertTrue([comment.text isEqualToString:@"Congrats!"], @"text doesn't match");
+      XCTAssertTrue([comment.owner isEqualToString:@"50e5ecfe8768a1336c000019"], @"owner doesn't match");
+    }
 	}
 
 	for (TOMThumb *thumb in entry.thumbs)
 	{
-		XCTAssertTrue([thumb isKindOfClass:[TOMThumb class]], @"Expecting a TOMThumb, got %@.", NSStringFromClass([thumb class]));
-		XCTAssertTrue([thumb.url isEqualToString:@"http://localhost/43247328927343"], @"url doesn't match");
-		XCTAssertTrue(thumb.x == 576.0f, @"x doesn't match");
-		XCTAssertTrue(thumb.y == 344.0f, @"y doesn't match");
+    BOOL isCorrectClass = [thumb isKindOfClass:[TOMThumb class]];
+		XCTAssertTrue(isCorrectClass, @"Expecting a TOMThumb, got %@.", NSStringFromClass([thumb class]));
+
+    if (isCorrectClass)
+    {
+      XCTAssertTrue([thumb.url isEqualToString:@"http://localhost/43247328927343"], @"url doesn't match");
+      XCTAssertTrue(thumb.x == 576.0f, @"x doesn't match");
+      XCTAssertTrue(thumb.y == 344.0f, @"y doesn't match");
+    }
 	}
 
 	for (NSString *like in entry.likes)

@@ -7,6 +7,19 @@
 
 #import "TOMJSONAdapter.h"
 
+#import <UIKit/UIKit.h>
+#import <objc/runtime.h>
+
+typedef NS_ENUM(u_int8_t) {
+  NSObjectReturnTypeNotFound,
+  NSObjectReturnTypeUnknown,
+  NSObjectReturnTypeFloat,
+  NSObjectReturnTypeDouble,
+  NSObjectReturnTypeInteger,
+  NSObjectReturnTypeBOOL,
+  NSObjectReturnTypeID
+} NSObjectReturnType;
+
 const NSInteger kTOMJSONAdapterInvalidObjectDetected = 100;
 const NSInteger kTOMJSONAdapterObjectFailedValidation = 101;
 const NSInteger kTOMJSONAdapterInvalidJSON = 102;
@@ -124,6 +137,7 @@ NSString *const kTOMJSONAdapterKeyForDateFormat = @"kTOMJSONAdapterKeyForDateFor
       dateFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
 			dateFormatter.dateFormat = dateFormat;
 			object = [dateFormatter dateFromString:object];
+      NSLog(@"%@", object);
 		}
     else
     {
@@ -197,13 +211,15 @@ NSString *const kTOMJSONAdapterKeyForDateFormat = @"kTOMJSONAdapterKeyForDateFor
   }
 
 	id object = [[class alloc] init];
+  
 	NSDictionary *validationDictionary = [self validationDictionaryForClass:class];
 	for (NSString *key in validationDictionary.allKeys)
 	{
-    id value;
-
     NSDictionary *propertyValidationDictionary = validationDictionary[key];
     NSString *map = propertyValidationDictionary[kTOMJSONAdapterKeyForMap];
+    NSString *accessorKey = (map ?: key); // Map to accessor.
+
+    id value;
 
     if (NSNotFound != [key rangeOfString:@"."].location) // YES if key contains a period
     {
@@ -252,11 +268,10 @@ NSString *const kTOMJSONAdapterKeyForDateFormat = @"kTOMJSONAdapterKeyForDateFor
 		}
 
     if (nil == value) {
-			continue; // Property doesn't exist or is nil.
+      continue; // Property doesn't exist or is nil.
     }
 
-    NSString *accessorKey = (map ?: key); // Map to accessor.
-    NSObjectReturnType returnType = [[object class] returnTypeForProperty:accessorKey];
+    NSObjectReturnType returnType = [self returnTypeForClass:[object class] property:accessorKey];
 
     switch (returnType)
     {
@@ -287,9 +302,14 @@ NSString *const kTOMJSONAdapterKeyForDateFormat = @"kTOMJSONAdapterKeyForDateFor
       }
       case NSObjectReturnTypeID:
       {
-        NSMutableDictionary *mutableDictionary = propertyValidationDictionary.mutableCopy;
-        mutableDictionary[kTOMJSONAdapterKeyForType] = [NSObject returnTypeClassForProperty:accessorKey];
-        propertyValidationDictionary = mutableDictionary.copy;
+        Class propertyClass = [self returnTypeClassForClass:[object class] property:accessorKey];
+
+        if (propertyClass)
+        {
+          NSMutableDictionary *mutableDictionary = propertyValidationDictionary.mutableCopy;
+          mutableDictionary[kTOMJSONAdapterKeyForType] = propertyClass;
+          propertyValidationDictionary = mutableDictionary.copy;
+        }
 
         value = [self objectFromObject:value validationDictionary:propertyValidationDictionary];
         break;
@@ -442,6 +462,90 @@ NSString *const kTOMJSONAdapterKeyForDateFormat = @"kTOMJSONAdapterKeyForDateFor
 - (NSString *)errorMessageWithClassNameForErrorMessage:(NSString *)errorMessage
 {
   return [NSString stringWithFormat:@"%@: %@", NSStringFromClass([self class]), errorMessage];
+}
+
+#pragma mark - Property Detection
+
+- (NSObjectReturnType)returnTypeForClass:(Class)class property:(NSString *)name
+{
+  objc_property_t property = [self propertyForClass:class propertyName:name];
+
+  if (nil == property) {
+    return NSObjectReturnTypeNotFound;
+  }
+
+  const char *type = property_getAttributes(property);
+
+  NSString *typeString = [NSString stringWithUTF8String:type];
+  NSArray *attributes = [typeString componentsSeparatedByString:@","];
+  NSString *typeAttribute = [attributes objectAtIndex:0];
+  NSString *propertyType = [typeAttribute substringFromIndex:1];
+  const char *rawPropertyType = propertyType.UTF8String;
+
+  if (strcmp(rawPropertyType, @encode(float)) == 0
+      || strcmp(rawPropertyType, @encode(double)) == 0
+      || strcmp(rawPropertyType, @encode(CGFloat)) == 0)
+  {
+    return NSObjectReturnTypeFloat;
+  }
+  else if (strcmp(rawPropertyType, @encode(int)) == 0
+           || strcmp(rawPropertyType, @encode(uint)) == 0
+           || strcmp(rawPropertyType, @encode(NSInteger)) == 0
+           || strcmp(rawPropertyType, @encode(NSUInteger)) == 0
+           )
+  {
+    return NSObjectReturnTypeInteger;
+  }
+  else if (strcmp(rawPropertyType, @encode(BOOL)) == 0)
+  {
+    return NSObjectReturnTypeBOOL;
+  }
+  else if (strcmp(rawPropertyType, @encode(id)) == 0 || [propertyType hasPrefix:@"@"])
+  {
+    return NSObjectReturnTypeID;
+  }
+  else
+  {
+    return NSObjectReturnTypeUnknown;
+  }
+}
+
+- (Class)returnTypeClassForClass:(Class)class property:(NSString *)name
+{
+  objc_property_t property = [self propertyForClass:class propertyName:name];
+  const char *type = property_getAttributes(property);
+
+  NSString *typeString = [NSString stringWithUTF8String:type];
+  NSArray *attributes = [typeString componentsSeparatedByString:@","];
+  NSString *typeAttribute = attributes.firstObject;
+  NSString *propertyType = [typeAttribute substringFromIndex:1];
+
+  propertyType = [propertyType substringFromIndex:1]; // Remove @ from front
+  NSCharacterSet *characterSet = [NSCharacterSet characterSetWithCharactersInString:@"\""]; // Remove surrounding quotes
+  NSString *typeClassName = [propertyType stringByTrimmingCharactersInSet:characterSet];
+
+  Class returnClass = NSClassFromString(typeClassName);
+  return returnClass;
+}
+
+- (objc_property_t)propertyForClass:(Class)class propertyName:(NSString *)name
+{
+  unsigned int outCount;
+  objc_property_t *properties = class_copyPropertyList(class, &outCount);
+
+  for (int i = 0; i < outCount; i++)
+  {
+    objc_property_t property = properties[i];
+
+    const char *propertyName = name.UTF8String;
+    const char *currentPropertyName = property_getName(property);
+
+    if (0 == strcmp(propertyName, currentPropertyName)) {
+      return property;
+    }
+  }
+  
+  return nil;
 }
 
 @end
