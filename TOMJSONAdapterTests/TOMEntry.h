@@ -16,7 +16,6 @@ typedef enum {
 
 @property (nonatomic, strong) NSString *entryID;
 @property (nonatomic, strong) NSArray *thumbs;
-@property (nonatomic, strong) NSDictionary *geo;
 @property (nonatomic, strong) NSString *owner;
 @property (nonatomic, strong) NSArray *comments;
 @property (nonatomic, strong) NSArray *likes;

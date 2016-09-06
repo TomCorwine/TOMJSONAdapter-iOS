@@ -93,7 +93,7 @@
 	NSString *json = @"{\
 	\"eid\": \"511fe8718768a126bc000031\", \
 	\"owner\": \"501fd8718768a126bc000001\", \
-	\"created_at\": \"2013-03-13'T'12:04:03'Z'\", \
+	\"created_at\": \"2013-03-13-12:04:03\", \
 	\"type\": 1, \
   \"enabled\": true, \
 	\"geo\": {\"type\": \"Point\", \"coordinates\": [-40.34324344, 70.434388743]}, \
@@ -112,14 +112,23 @@
 	XCTAssertTrue([entry.owner isEqualToString:@"501fd8718768a126bc000001"], @"owner doesn't match");
 	XCTAssertTrue(entry.type == 1, @"type isn't 1");
   XCTAssertTrue(entry.enabled == YES, @"enabled isn't YES");
-	XCTAssertTrue([entry.geo isKindOfClass:[NSDictionary class]], @"Expecting a NSDictionary, got %@.", NSStringFromClass([entry.geo class]));
 	XCTAssertTrue([entry.thumbs isKindOfClass:[NSArray class]], @"Expecting a NSArray, got %@.", NSStringFromClass([entry.thumbs class]));
 	XCTAssertTrue([entry.comments isKindOfClass:[NSArray class]], @"Expecting a NSArray, got %@.", NSStringFromClass([entry.comments class]));
 	XCTAssertTrue([entry.likes isKindOfClass:[NSArray class]], @"Expecting a NSArray, got %@.", NSStringFromClass([entry.likes class]));
 	XCTAssertTrue([entry.views isKindOfClass:[NSArray class]], @"Expecting a NSArray, got %@.", NSStringFromClass([entry.views class]));
-  XCTAssertTrue([entry.coordinates isKindOfClass:[NSArray class]], @"Expecting a NSArray, got %@.", NSStringFromClass([entry.coordinates class]));
 
-  BOOL isCorrectClass = [entry.createdAt isKindOfClass:[NSDate class]];
+  BOOL isCorrectClass = [entry.coordinates isKindOfClass:[NSArray class]];
+  XCTAssertTrue(isCorrectClass, @"Expecting a NSArray, got %@.", NSStringFromClass([entry.coordinates class]));
+  if (isCorrectClass)
+  {
+    NSArray *coordinatesArray = entry.coordinates;
+    NSNumber *longitude = coordinatesArray[0];
+    NSNumber *latitude = coordinatesArray[1];
+    XCTAssertTrue(longitude.doubleValue == -40.34324344, @"Longitude is not correct.");
+    XCTAssertTrue(latitude.doubleValue == 70.434388743, @"Latitude is not correct.");
+  }
+
+  isCorrectClass = [entry.createdAt isKindOfClass:[NSDate class]];
   XCTAssertTrue(isCorrectClass, @"Expecting a NSDate, got %@.", NSStringFromClass([entry.createdAt class]));
   if (isCorrectClass) {
     XCTAssertTrue(entry.createdAt.timeIntervalSince1970, @"createdAt doesn't match");

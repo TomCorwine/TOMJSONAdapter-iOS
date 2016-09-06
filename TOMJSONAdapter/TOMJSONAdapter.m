@@ -27,9 +27,10 @@ const NSInteger kTOMJSONAdapterInvalidJSON = 102;
 NSString *const kTOMJSONAdapterKeyForIdentify = @"kTOMJSONAdapterKeyForIdentify";
 NSString *const kTOMJSONAdapterKeyForRequired = @"kTOMJSONAdapterKeyForRequired";
 NSString *const kTOMJSONAdapterKeyForMap = @"kTOMJSONAdapterKeyForMap";
-NSString *const kTOMJSONAdapterKeyForType = @"kTOMJSONAdapterKeyForType";
 NSString *const kTOMJSONAdapterKeyForArrayContents = @"kTOMJSONAdapterKeyForArrayContents";
 NSString *const kTOMJSONAdapterKeyForDateFormat = @"kTOMJSONAdapterKeyForDateFormat";
+
+NSString *const kTOMJSONAdapterKeyForType = @"kTOMJSONAdapterKeyForType";
 
 @implementation TOMJSONAdapterBool
 @end
@@ -75,7 +76,9 @@ NSString *const kTOMJSONAdapterKeyForDateFormat = @"kTOMJSONAdapterKeyForDateFor
     }
 	}
 
-  id root = [self objectFromObject:JSONRepresentation validationDictionary:@{kTOMJSONAdapterKeyForType: rootClass}];
+  NSDictionary *validationDictionary = (rootClass ? @{kTOMJSONAdapterKeyForType: rootClass} : nil);
+
+  id root = [self objectFromObject:JSONRepresentation validationDictionary:validationDictionary];
 
   if (NO == [[root class] isEqual:rootClass]) {
     [self createErrorWithType:kTOMJSONAdapterObjectFailedValidation additionalInfo:nil];
@@ -147,7 +150,7 @@ NSString *const kTOMJSONAdapterKeyForDateFormat = @"kTOMJSONAdapterKeyForDateFor
       object = nil;
     }
 	}
-  else if ([classType isEqual:[NSNumber class]])
+  else if ([classType isEqual:[NSNumber class]] || [classType isEqual:[TOMJSONAdapterBool class]])
   {
 		if (NO == [object isKindOfClass:[NSNumber class]])
 		{
@@ -157,21 +160,9 @@ NSString *const kTOMJSONAdapterKeyForDateFormat = @"kTOMJSONAdapterKeyForDateFor
 			object = nil;
 		}
   }
-    else if ([classType isEqual:[TOMJSONAdapterBool class]])
-    {
-    }
-  else if ([object isKindOfClass:[NSDictionary class]])
+  else if (NO == [classType isEqual:[NSDictionary class]] && [object isKindOfClass:[NSDictionary class]])
   {
     object = [self objectOfType:classType fromDictionary:object];
-
-      // This will never happen. Need to re-implement class validation.
-    if (NO == [object isKindOfClass:classType])
-    {
-      NSString *errorDescription = [NSString stringWithFormat:@"Expecting %@, got %@", classType, NSStringFromClass([object class])];
-      [self createErrorWithType:kTOMJSONAdapterObjectFailedValidation additionalInfo:errorDescription];
-
-      object = nil;
-    }
   }
   else
   {
@@ -211,10 +202,11 @@ NSString *const kTOMJSONAdapterKeyForDateFormat = @"kTOMJSONAdapterKeyForDateFor
   }
 
 	id object = [[class alloc] init];
-  
-	NSDictionary *validationDictionary = [self validationDictionaryForClass:class];
-	for (NSString *key in validationDictionary.allKeys)
-	{
+
+  NSDictionary *validationDictionary = [self validationDictionaryForClass:class];
+
+  for (NSString *key in validationDictionary.allKeys)
+  {
     NSDictionary *propertyValidationDictionary = validationDictionary[key];
     NSString *map = propertyValidationDictionary[kTOMJSONAdapterKeyForMap];
     NSString *accessorKey = (map ?: key); // Map to accessor.
@@ -257,7 +249,16 @@ NSString *const kTOMJSONAdapterKeyForDateFormat = @"kTOMJSONAdapterKeyForDateFor
       value = dictionary[key];
     }
 
-    NSNumber *required = ([propertyValidationDictionary.allKeys containsObject:kTOMJSONAdapterKeyForRequired] ? propertyValidationDictionary[kTOMJSONAdapterKeyForRequired] : @NO); // Default to NO unless dictionary contains a kTOMJSONAdapterKeyForRequired key.
+    NSNumber *required;
+    if ([propertyValidationDictionary.allKeys containsObject:kTOMJSONAdapterKeyForRequired])
+    {
+      required = propertyValidationDictionary[kTOMJSONAdapterKeyForRequired];
+    }
+    else
+    {
+      // Default to NO unless dictionary contains a kTOMJSONAdapterKeyForRequired key.
+      required = self.defaultValidationDictionary[kTOMJSONAdapterKeyForRequired];
+    }
 
     if (required.boolValue && NO == [dictionary.allKeys containsObject:key])
 		{

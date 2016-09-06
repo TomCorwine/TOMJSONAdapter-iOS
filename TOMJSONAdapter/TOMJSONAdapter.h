@@ -19,7 +19,6 @@ extern const NSInteger kTOMJSONAdapterInvalidJSON;
 extern NSString *const kTOMJSONAdapterKeyForIdentify;
 extern NSString *const kTOMJSONAdapterKeyForRequired;
 extern NSString *const kTOMJSONAdapterKeyForMap;
-extern NSString *const kTOMJSONAdapterKeyForType;
 extern NSString *const kTOMJSONAdapterKeyForArrayContents;
 extern NSString *const kTOMJSONAdapterKeyForDateFormat;
 
@@ -48,7 +47,7 @@ extern NSString *const kTOMJSONAdapterKeyForDateFormat;
     },
   @"items": @{
     kTOMJSONAdapterKeyForType: [NSDate class],
-    kTOMJSONAdapterKeyForDateFormat: @"yyyy-MM-dd'T'HH:mm:ss'Z'"
+    kTOMJSONAdapterKeyForDateFormat: @"yyyy-MM-dd-HH:mm:ss"
     },
  	@"is_enabled": @{
  		kTOMJSONAdapterKeyForRequired: @NO,
@@ -72,12 +71,14 @@ extern NSString *const kTOMJSONAdapterKeyForDateFormat;
 
 @interface TOMJSONAdapter : NSObject
 
+@property (nonatomic, strong) NSDictionary *defaultValidationDictionary;
+
 + (instancetype)JSONAdapter;
 
 /*
  @pramas
  JSONRepresentation can be either a NSArray, NSDictionary or NSString.
- rootClass is the class root object of response is expected to be.
+ rootClass is the class root object of response is expected to be (optional).
  */
 - (id)createFromJSONRepresentation:(id)JSONRepresentation expectedRootClass:(Class)rootClass errors:(NSArray **)errors;
 

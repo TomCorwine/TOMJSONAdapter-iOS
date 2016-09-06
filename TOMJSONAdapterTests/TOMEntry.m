@@ -31,7 +31,7 @@
 			kTOMJSONAdapterKeyForRequired: @NO,
 			kTOMJSONAdapterKeyForMap: @"createdAt",
 			//kTOMJSONAdapterKeyForType: [NSDate class],
-      kTOMJSONAdapterKeyForDateFormat: @"yyyy-MM-dd'T'HH:mm:ss'Z'"
+      kTOMJSONAdapterKeyForDateFormat: @"yyyy-MM-dd-HH:mm:ss"
 			},
 		@"thumbs": @{
 			//kTOMJSONAdapterKeyForType: [NSArray class],
@@ -40,10 +40,6 @@
 		@"comments": @{
 			//kTOMJSONAdapterKeyForType: [NSArray class],
       kTOMJSONAdapterKeyForArrayContents: [TOMComment class]
-			},
-		@"geo": @{
-			kTOMJSONAdapterKeyForRequired: @NO,
-      //kTOMJSONAdapterKeyForType: [NSDictionary class]
 			},
 		@"owner": @{
 			//kTOMJSONAdapterKeyForType: [NSString class],
@@ -64,7 +60,7 @@
     @"geo.coordinates": @{
       kTOMJSONAdapterKeyForMap: @"coordinates",
       kTOMJSONAdapterKeyForRequired: @NO,
-      kTOMJSONAdapterKeyForType: [NSArray class]
+      //kTOMJSONAdapterKeyForType: [NSArray class]
     }
 	};
 }
