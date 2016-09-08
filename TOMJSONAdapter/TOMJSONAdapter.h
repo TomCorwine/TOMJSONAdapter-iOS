@@ -9,14 +9,14 @@
 #import <Availability.h>
 
 #if __IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_5_0
-	#error TOMJSONAdapter requires iOS 5.0 or later
+//	#error TOMJSONAdapter requires iOS 5.0 or later
 #endif
 
 extern const NSInteger kTOMJSONAdapterInvalidObjectDetected;
 extern const NSInteger kTOMJSONAdapterObjectFailedValidation;
 extern const NSInteger kTOMJSONAdapterInvalidJSON;
 
-extern NSString *const kTOMJSONAdapterKeyForIdentify;
+//extern NSString *const kTOMJSONAdapterKeyForIdentify;
 extern NSString *const kTOMJSONAdapterKeyForRequired;
 extern NSString *const kTOMJSONAdapterKeyForMap;
 extern NSString *const kTOMJSONAdapterKeyForArrayContents;
@@ -32,31 +32,24 @@ extern NSString *const kTOMJSONAdapterKeyForDateFormat;
  @{
  	@"oid": @{
  		kTOMJSONAdapterKeyForIdentify: @YES,
- 		kTOMJSONAdapterKeyForMap: @"objectID",
- 		kTOMJSONAdapterKeyForType: [NSString class]
+ 		kTOMJSONAdapterKeyForMap: @"objectID"
  		},
  	@"name": @{,
- 		kTOMJSONAdapterKeyForType: [NSString class]
  		},
  	@"count": @{
- 		kTOMJSONAdapterKeyForType: [NSNumber class]
  		},
   @"items": @{
-    kTOMJSONAdapterKeyForType: [NSArray class],
     kTOMJSONAdapterKeyForArrayContents: [TOMEntry class]
     },
   @"items": @{
-    kTOMJSONAdapterKeyForType: [NSDate class],
     kTOMJSONAdapterKeyForDateFormat: @"yyyy-MM-dd-HH:mm:ss"
     },
  	@"is_enabled": @{
  		kTOMJSONAdapterKeyForRequired: @NO,
- 		kTOMJSONAdapterKeyForMap: @"enabled",
- 		kTOMJSONAdapterKeyForType: [TOMJSONAdapterBool class],
+ 		kTOMJSONAdapterKeyForMap: @"enabled"
  		},
  	@"type": @{
- 		kTOMJSONAdapterKeyForRequired: @NO,
- 		kTOMJSONAdapterKeyForType: [NSNumber class]
+ 		kTOMJSONAdapterKeyForRequired: @NO
  		}
  }
  */

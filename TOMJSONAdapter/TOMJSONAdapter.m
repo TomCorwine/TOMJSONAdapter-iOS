@@ -24,7 +24,7 @@ const NSInteger kTOMJSONAdapterInvalidObjectDetected = 100;
 const NSInteger kTOMJSONAdapterObjectFailedValidation = 101;
 const NSInteger kTOMJSONAdapterInvalidJSON = 102;
 
-NSString *const kTOMJSONAdapterKeyForIdentify = @"kTOMJSONAdapterKeyForIdentify";
+//NSString *const kTOMJSONAdapterKeyForIdentify = @"kTOMJSONAdapterKeyForIdentify";
 NSString *const kTOMJSONAdapterKeyForRequired = @"kTOMJSONAdapterKeyForRequired";
 NSString *const kTOMJSONAdapterKeyForMap = @"kTOMJSONAdapterKeyForMap";
 NSString *const kTOMJSONAdapterKeyForArrayContents = @"kTOMJSONAdapterKeyForArrayContents";
