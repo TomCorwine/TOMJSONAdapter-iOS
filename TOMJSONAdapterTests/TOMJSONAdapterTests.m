@@ -184,7 +184,7 @@
 	NSArray *errors;
 	TOMJSONAdapter *jsonAdapter = [TOMJSONAdapter JSONAdapter];
 	id object = [jsonAdapter createFromJSONRepresentation:json expectedRootClass:class errors:&errors];
-  XCTAssertNil(errors, @"%@", @"There are errors.");
+  XCTAssertNil(errors, @"There are errors.");
 	XCTAssertNotNil(object, @"Root object is nil.");
 	return object;
 }

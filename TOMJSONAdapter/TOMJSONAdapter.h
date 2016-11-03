@@ -22,9 +22,11 @@ extern NSString *const kTOMJSONAdapterKeyForMap;
 extern NSString *const kTOMJSONAdapterKeyForArrayContents;
 extern NSString *const kTOMJSONAdapterKeyForDateFormat;
 
+/*
 // Dummy class for specifiying a BOOL
 @interface TOMJSONAdapterBool : NSNumber
 @end
+*/
 
 @protocol TOMJSONAdapterProtocol <NSObject>
 /*
@@ -64,13 +66,16 @@ extern NSString *const kTOMJSONAdapterKeyForDateFormat;
 
 @interface TOMJSONAdapter : NSObject
 
+/*
+ Right now only supports kTOMJSONAdapterKeyForRequired.
+ */
 @property (nonatomic, strong) NSDictionary *defaultValidationDictionary;
 
 + (instancetype)JSONAdapter;
 
 /*
  @pramas
- JSONRepresentation can be either a NSArray, NSDictionary or NSString.
+ JSONRepresentation can be either a NSArray, NSDictionary, NSString or NSData.
  rootClass is the class root object of response is expected to be (optional).
  */
 - (id)createFromJSONRepresentation:(id)JSONRepresentation expectedRootClass:(Class)rootClass errors:(NSArray **)errors;

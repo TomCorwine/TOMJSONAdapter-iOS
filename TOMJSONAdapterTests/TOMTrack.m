@@ -20,7 +20,7 @@
 {
 	return @{
 		@"tid": @{
-			kTOMJSONAdapterKeyForIdentify: @YES,
+			//kTOMJSONAdapterKeyForIdentify: @YES,
 			kTOMJSONAdapterKeyForMap: @"trackID",
 			//kTOMJSONAdapterKeyForType: [NSString class]
 			},
