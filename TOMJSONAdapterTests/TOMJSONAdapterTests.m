@@ -53,10 +53,22 @@
 
 - (void)test02User
 {
-	NSString *json = @"{\"uid\": \"511fe8718768a126bc000032\", \
-    \"name\": \"Congrats!\", \
-    \"country\": \"US\", \
-	\"tz\": \"America/New_York\"}";
+	NSString *json = @"{\"uid\": \"511fe8718768a126bc000032\",\
+  \"name\": \"Congrats!\", \
+  \"country\": \"US\", \
+	\"tz\": \"America/New_York\",\
+  \"friends\": {\
+    \"personal\": [\
+      8745,\
+      9287\
+    ],\
+    \"professional\": [\
+      568,\
+      212,\
+      4256\
+    ]\
+    }\
+  }";
 	TOMUser *user = [self parseJson:json expectedClass:[TOMUser class]];
 
   BOOL isCorrectClass = [user isKindOfClass:[TOMUser class]];
@@ -67,6 +79,20 @@
     XCTAssertTrue([user.userID isEqualToString:@"511fe8718768a126bc000032"], @"userID doesn't match");
     XCTAssertTrue([user.country isEqualToString:@"US"], @"country doesn't match");
     XCTAssertTrue([user.timeZone isEqualToString:@"America/New_York"], @"timeZone doesn't match");
+
+    // TODO: Rewrite these to insure exception won’t be thrown if array isn’t created properly.
+    XCTAssertTrue([user.personalFriends isKindOfClass:[NSArray class]]);
+    NSArray *array = user.personalFriends;
+    XCTAssertTrue(array.count == 2);
+    XCTAssertTrue([array[0] isEqualToNumber:@8745]);
+    XCTAssertTrue([array[1] isEqualToNumber:@9287]);
+
+    XCTAssertTrue([user.professionalFriends isKindOfClass:[NSArray class]]);
+    array = user.professionalFriends;
+    XCTAssertTrue(array.count == 3);
+    XCTAssertTrue([array[0] isEqualToNumber:@568]);
+    XCTAssertTrue([array[1] isEqualToNumber:@212]);
+    XCTAssertTrue([array[2] isEqualToNumber:@4256]);
   }
 }
 

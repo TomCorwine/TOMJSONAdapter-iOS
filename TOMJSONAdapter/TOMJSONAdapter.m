@@ -238,13 +238,21 @@ NSString *const kTOMJSONAdapterKeyForType = @"kTOMJSONAdapterKeyForType";
                 continue;
             }
 
-            NSDictionary *newDictionary = dictionary;
+            id newObject = dictionary;
 
             for (NSString *subKey in keys)
             {
-                if ([newDictionary isKindOfClass:[NSDictionary class]])
+                if ([newObject isKindOfClass:[NSDictionary class]])
                 {
-                    newDictionary = newDictionary[subKey];
+                    newObject = newObject[subKey];
+                }
+                else if ([newObject isKindOfClass:[NSArray class]])
+                {
+                    Class class = propertyValidationDictionary[kTOMJSONAdapterKeyForArrayContents];
+                    NSArray *array = [self arrayFromArray:newObject objectType:class];
+
+                    [object setValue:array forKey:accessorKey];
+                    continue;
                 }
                 else
                 {
@@ -255,7 +263,7 @@ NSString *const kTOMJSONAdapterKeyForType = @"kTOMJSONAdapterKeyForType";
                 }
             }
 
-            value = newDictionary;
+            value = newObject;
         }
         else
         {

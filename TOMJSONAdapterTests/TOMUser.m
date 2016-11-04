@@ -36,8 +36,16 @@
 		@"thumbs": @{
 			kTOMJSONAdapterKeyForRequired: @NO,
 			//kTOMJSONAdapterKeyForType: [NSArray class],
-      kTOMJSONAdapterKeyForArrayContents: [TOMThumb class]
-			}
+            kTOMJSONAdapterKeyForArrayContents: [TOMThumb class]
+			},
+        @"friends.personal": @{
+                kTOMJSONAdapterKeyForMap: @"personalFriends",
+                kTOMJSONAdapterKeyForArrayContents: [NSNumber class]
+                },
+        @"friends.professional": @{
+                kTOMJSONAdapterKeyForMap: @"professionalFriends",
+                kTOMJSONAdapterKeyForArrayContents: [NSNumber class]
+                }
 	};
 }
 

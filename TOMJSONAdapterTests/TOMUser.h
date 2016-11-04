@@ -15,4 +15,7 @@
 @property (nonatomic, strong) NSString *timeZone;
 @property (nonatomic, strong) NSArray *thumbs;
 
+@property (nonatomic, strong) NSArray *personalFriends;
+@property (nonatomic, strong) NSArray *professionalFriends;
+
 @end
