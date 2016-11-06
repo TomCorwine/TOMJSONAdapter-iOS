@@ -59,6 +59,11 @@ extern NSString *const kTOMJSONAdapterKeyForDateFormat;
 
 @optional
 
+- (void)JSONAdapterWillConfigure;
+- (void)JSONAdapterDidConfigure;
+
+@optional
+
 // Alternate way of creating an object
 - (id)initWithDictionary:(NSDictionary *)dictionary;
 
