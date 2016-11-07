@@ -13,4 +13,8 @@
 @property (nonatomic, strong) NSString *text;
 @property (nonatomic, strong) NSString *owner;
 
+// Properties for testing hooks.
+@property (nonatomic, readonly) BOOL willConfigureTriggered;
+@property (nonatomic, readonly) BOOL didConfigureTriggered;
+
 @end

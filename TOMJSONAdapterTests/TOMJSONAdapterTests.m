@@ -38,17 +38,19 @@
 	NSString *json = @"{\"cid\": \"511fe8718768a126bc000032\", \
     \"message\": \"Congrats!\", \
     \"owner\": \"50e5ecfe8768a1336c000019\"}";
+
 	TOMComment *comment = [self parseJson:json expectedClass:[TOMComment class]];
 
-  BOOL isCorrectClass = [comment isKindOfClass:[TOMComment class]];
-  XCTAssertTrue(isCorrectClass, @"Expecting a TOMComment, got %@.", NSStringFromClass([comment class]));
-
-  if (isCorrectClass)
-  {
-    XCTAssertTrue([comment.commentID isEqualToString:@"511fe8718768a126bc000032"], @"commentID doesn't match");
-    XCTAssertTrue([comment.text isEqualToString:@"Congrats!"], @"text doesn't match");
-    XCTAssertTrue([comment.owner isEqualToString:@"50e5ecfe8768a1336c000019"], @"owner doesn't match");
+  if (nil == comment) {
+    return;
   }
+
+  XCTAssertTrue([comment.commentID isEqualToString:@"511fe8718768a126bc000032"], @"commentID doesn’t match");
+  XCTAssertTrue([comment.text isEqualToString:@"Congrats!"], @"text doesn’t match");
+  XCTAssertTrue([comment.owner isEqualToString:@"50e5ecfe8768a1336c000019"], @"owner doesn't match");
+
+  XCTAssertTrue(comment.willConfigureTriggered, @"JSONAdapterWillConfigure was not called.");
+  XCTAssertTrue(comment.didConfigureTriggered, @"JSONAdapterDidConfigure was not called.");
 }
 
 - (void)test02User
@@ -69,31 +71,30 @@
     ]\
     }\
   }";
+
 	TOMUser *user = [self parseJson:json expectedClass:[TOMUser class]];
 
-  BOOL isCorrectClass = [user isKindOfClass:[TOMUser class]];
-  XCTAssertTrue(isCorrectClass, @"Expecting a TOMUser, got %@.", NSStringFromClass([user class]));
-
-  if (isCorrectClass)
-  {
-    XCTAssertTrue([user.userID isEqualToString:@"511fe8718768a126bc000032"], @"userID doesn't match");
-    XCTAssertTrue([user.country isEqualToString:@"US"], @"country doesn't match");
-    XCTAssertTrue([user.timeZone isEqualToString:@"America/New_York"], @"timeZone doesn't match");
-
-    // TODO: Rewrite these to insure exception won’t be thrown if array isn’t created properly.
-    XCTAssertTrue([user.personalFriends isKindOfClass:[NSArray class]]);
-    NSArray *array = user.personalFriends;
-    XCTAssertTrue(array.count == 2);
-    XCTAssertTrue([array[0] isEqualToNumber:@8745]);
-    XCTAssertTrue([array[1] isEqualToNumber:@9287]);
-
-    XCTAssertTrue([user.professionalFriends isKindOfClass:[NSArray class]]);
-    array = user.professionalFriends;
-    XCTAssertTrue(array.count == 3);
-    XCTAssertTrue([array[0] isEqualToNumber:@568]);
-    XCTAssertTrue([array[1] isEqualToNumber:@212]);
-    XCTAssertTrue([array[2] isEqualToNumber:@4256]);
+  if (nil == user) {
+    return;
   }
+
+  XCTAssertTrue([user.userID isEqualToString:@"511fe8718768a126bc000032"], @"userID doesn’t match");
+  XCTAssertTrue([user.country isEqualToString:@"US"], @"country doesn’t match");
+  XCTAssertTrue([user.timeZone isEqualToString:@"America/New_York"], @"timeZone doesn’t match");
+
+  // TODO: Rewrite these to insure exception won’t be thrown if array isn’t created properly.
+  XCTAssertTrue([user.personalFriends isKindOfClass:[NSArray class]]);
+  NSArray *array = user.personalFriends;
+  XCTAssertTrue(array.count == 2);
+  XCTAssertTrue([array[0] isEqualToNumber:@8745]);
+  XCTAssertTrue([array[1] isEqualToNumber:@9287]);
+
+  XCTAssertTrue([user.professionalFriends isKindOfClass:[NSArray class]]);
+  array = user.professionalFriends;
+  XCTAssertTrue(array.count == 3);
+  XCTAssertTrue([array[0] isEqualToNumber:@568]);
+  XCTAssertTrue([array[1] isEqualToNumber:@212]);
+  XCTAssertTrue([array[2] isEqualToNumber:@4256]);
 }
 
 - (void)test03Thumb
@@ -101,17 +102,16 @@
 	NSString *json = @"{\"url\": \"http://localhost/43247328927343\", \
     \"x\": 576, \
     \"y\": 344}";
+
 	TOMThumb *thumb = [self parseJson:json expectedClass:[TOMThumb class]];
 
-  BOOL isCorrectClass = [thumb isKindOfClass:[TOMThumb class]];
-  XCTAssertTrue(isCorrectClass, @"Expecting a TOMThumb, got %@.", NSStringFromClass([thumb class]));
-
-  if (isCorrectClass)
-  {
-    XCTAssertTrue([thumb.url isEqualToString:@"http://localhost/43247328927343"], @"url doesn't match");
-    XCTAssertTrue(thumb.x == 576.0f, @"x doesn't match");
-    XCTAssertTrue(thumb.y == 344.0f, @"y doesn't match");
+  if (nil == thumb) {
+    return;
   }
+
+  XCTAssertTrue([thumb.url isEqualToString:@"http://localhost/43247328927343"], @"url doesn’t match");
+  XCTAssertTrue(thumb.x == 576.0f, @"x doesn’t match");
+  XCTAssertTrue(thumb.y == 344.0f, @"y doesn’t match");
 }
 
 - (void)test04Entry
@@ -132,12 +132,17 @@
 	\"likes\": [\"501fd8718768a126bc000001\", \"511fe8718768a126bc000032\"], \
 	\"views\": [\"501fd8718768a126bc000001\", \"511fe8718768a126bc000032\"] \
 	}";
+
 	TOMEntry *entry = [self parseJson:json expectedClass:[TOMEntry class]];
-	XCTAssertTrue([entry isKindOfClass:[TOMEntry class]], @"Expecting a TOMEntry, got %@.", NSStringFromClass([entry class]));
-	XCTAssertTrue([entry.entryID isEqualToString:@"511fe8718768a126bc000031"], @"entryID doesn't match");
-	XCTAssertTrue([entry.owner isEqualToString:@"501fd8718768a126bc000001"], @"owner doesn't match");
-	XCTAssertTrue(entry.type == 1, @"type isn't 1");
-  XCTAssertTrue(entry.enabled == YES, @"enabled isn't YES");
+
+  if (nil == entry) {
+    return;
+  }
+
+	XCTAssertTrue([entry.entryID isEqualToString:@"511fe8718768a126bc000031"], @"entryID doesn’t match");
+	XCTAssertTrue([entry.owner isEqualToString:@"501fd8718768a126bc000001"], @"owner doesn’t match");
+	XCTAssertTrue(entry.type == 1, @"type isn’t 1");
+  XCTAssertTrue(entry.enabled == YES, @"enabled isn’t YES");
 	XCTAssertTrue([entry.thumbs isKindOfClass:[NSArray class]], @"Expecting a NSArray, got %@.", NSStringFromClass([entry.thumbs class]));
 	XCTAssertTrue([entry.comments isKindOfClass:[NSArray class]], @"Expecting a NSArray, got %@.", NSStringFromClass([entry.comments class]));
 	XCTAssertTrue([entry.likes isKindOfClass:[NSArray class]], @"Expecting a NSArray, got %@.", NSStringFromClass([entry.likes class]));
@@ -157,7 +162,7 @@
   isCorrectClass = [entry.createdAt isKindOfClass:[NSDate class]];
   XCTAssertTrue(isCorrectClass, @"Expecting a NSDate, got %@.", NSStringFromClass([entry.createdAt class]));
   if (isCorrectClass) {
-    XCTAssertTrue(entry.createdAt.timeIntervalSince1970, @"createdAt doesn't match");
+    XCTAssertTrue(entry.createdAt.timeIntervalSince1970, @"createdAt doesn’t match");
   }
 
 	for (TOMComment *comment in entry.comments)
@@ -167,9 +172,9 @@
 
     if (isCorrectClass)
     {
-      XCTAssertTrue([comment.commentID isEqualToString:@"511fe8718768a126bc000032"], @"commentID doesn't match");
-      XCTAssertTrue([comment.text isEqualToString:@"Congrats!"], @"text doesn't match");
-      XCTAssertTrue([comment.owner isEqualToString:@"50e5ecfe8768a1336c000019"], @"owner doesn't match");
+      XCTAssertTrue([comment.commentID isEqualToString:@"511fe8718768a126bc000032"], @"commentID doesn’t match");
+      XCTAssertTrue([comment.text isEqualToString:@"Congrats!"], @"text doesn’t match");
+      XCTAssertTrue([comment.owner isEqualToString:@"50e5ecfe8768a1336c000019"], @"owner doesn’t match");
     }
 	}
 
@@ -180,7 +185,7 @@
 
     if (isCorrectClass)
     {
-      XCTAssertTrue([thumb.url isEqualToString:@"http://localhost/43247328927343"], @"url doesn't match");
+      XCTAssertTrue([thumb.url isEqualToString:@"http://localhost/43247328927343"], @"url doesn’t match");
       XCTAssertTrue(thumb.x == 576.0f, @"x doesn't match");
       XCTAssertTrue(thumb.y == 344.0f, @"y doesn't match");
     }
@@ -205,14 +210,29 @@
   XCTAssertTrue(lat.doubleValue == 70.434388743);
 }
 
+#pragma mark - Helpers
+
 - (id)parseJson:(NSString *)json expectedClass:(Class)class
 {
 	NSArray *errors;
 	TOMJSONAdapter *jsonAdapter = [TOMJSONAdapter JSONAdapter];
 	id object = [jsonAdapter createFromJSONRepresentation:json expectedRootClass:class errors:&errors];
+
   XCTAssertNil(errors, @"There are errors.");
-	XCTAssertNotNil(object, @"Root object is nil.");
-	return object;
+  XCTAssertNotNil(object, @"Root object is nil.");
+
+  BOOL isCorrectClass = [object isKindOfClass:class];
+  if (isCorrectClass)
+  {
+    return object;
+  }
+  else
+  {
+    XCTFail(@"Expecting a %@, got %@.", NSStringFromClass(class), NSStringFromClass([object class]));
+    XCTFail(@"Skipping tests for %@ as wrong kind of class was returned.", NSStringFromClass(class));
+
+    return nil;
+  }
 }
 
 @end

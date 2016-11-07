@@ -9,6 +9,13 @@
 
 #import "TOMJSONAdapter.h"
 
+@interface TOMComment ()
+
+@property (nonatomic) BOOL willConfigureTriggered;
+@property (nonatomic) BOOL didConfigureTriggered;
+
+@end
+
 @implementation TOMComment
 
 #pragma mark - TOMJSONAdapterProtocol
@@ -29,6 +36,16 @@
 			//kTOMJSONAdapterKeyForType: [NSString class]
 			}
 	};
+}
+
+- (void)JSONAdapterWillConfigure
+{
+    self.willConfigureTriggered = YES;
+}
+
+- (void)JSONAdapterDidConfigure
+{
+    self.didConfigureTriggered = YES;
 }
 
 @end
