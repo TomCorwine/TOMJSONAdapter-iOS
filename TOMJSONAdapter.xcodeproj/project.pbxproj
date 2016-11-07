@@ -35,7 +35,7 @@
 		F17B8BC61DD0FAA6005D86F2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F1840A2516CDB5F70093D758 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		F1840A2A16CDB5F70093D758 /* TOMJSONAdapter.h */ = {isa = PBXFileReference; indentWidth = 2; lastKnownFileType = sourcecode.c.h; path = TOMJSONAdapter.h; sourceTree = "<group>"; tabWidth = 2; };
-		F1840A2C16CDB5F70093D758 /* TOMJSONAdapter.m */ = {isa = PBXFileReference; indentWidth = 2; lastKnownFileType = sourcecode.c.objc; path = TOMJSONAdapter.m; sourceTree = "<group>"; tabWidth = 2; };
+		F1840A2C16CDB5F70093D758 /* TOMJSONAdapter.m */ = {isa = PBXFileReference; indentWidth = 4; lastKnownFileType = sourcecode.c.objc; path = TOMJSONAdapter.m; sourceTree = "<group>"; tabWidth = 4; };
 		F1840A3316CDB5F70093D758 /* TOMJSONAdapterTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TOMJSONAdapterTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		F1840A3E16CDB5F70093D758 /* TOMJSONAdapterTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "TOMJSONAdapterTests-Info.plist"; sourceTree = "<group>"; };
 		F1840A4316CDB5F70093D758 /* TOMJSONAdapterTests.m */ = {isa = PBXFileReference; indentWidth = 2; lastKnownFileType = sourcecode.c.objc; path = TOMJSONAdapterTests.m; sourceTree = "<group>"; tabWidth = 2; };
@@ -483,6 +483,7 @@
 				F17B8BCA1DD0FAA6005D86F2 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		F1840A1D16CDB5F70093D758 /* Build configuration list for PBXProject "TOMJSONAdapter" */ = {
 			isa = XCConfigurationList;

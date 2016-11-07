@@ -22,18 +22,11 @@ extern NSString *const kTOMJSONAdapterKeyForMap;
 extern NSString *const kTOMJSONAdapterKeyForArrayContents;
 extern NSString *const kTOMJSONAdapterKeyForDateFormat;
 
-/*
-// Dummy class for specifiying a BOOL
-@interface TOMJSONAdapterBool : NSNumber
-@end
-*/
-
 @protocol TOMJSONAdapterProtocol <NSObject>
 /*
  Format for JSONAdapterSchema dictionary:
  @{
  	@"oid": @{
- 		kTOMJSONAdapterKeyForIdentify: @YES,
  		kTOMJSONAdapterKeyForMap: @"objectID"
  		},
  	@"name": @{,
@@ -59,8 +52,8 @@ extern NSString *const kTOMJSONAdapterKeyForDateFormat;
 
 @optional
 
-- (void)JSONAdapterWillConfigure;
-- (void)JSONAdapterDidConfigure;
+- (void)JSONAdapterWillConfigureWithDictionary:(NSDictionary *)dictionary;
+- (void)JSONAdapterDidConfigureWithDictionary:(NSDictionary *)dictionary;
 
 @optional
 

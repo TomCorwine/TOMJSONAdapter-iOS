@@ -32,11 +32,6 @@ NSString *const kTOMJSONAdapterKeyForDateFormat = @"kTOMJSONAdapterKeyForDateFor
 
 NSString *const kTOMJSONAdapterKeyForType = @"kTOMJSONAdapterKeyForType";
 
-/*
-@implementation TOMJSONAdapterBool
-@end
-*/
-
 @interface TOMJSONAdapter ()
 
 @property (strong) NSMutableDictionary *objectValidationDictionary;
@@ -215,8 +210,8 @@ NSString *const kTOMJSONAdapterKeyForType = @"kTOMJSONAdapterKeyForType";
 
     id object = [[class alloc] init];
 
-    if ([object respondsToSelector:@selector(JSONAdapterWillConfigure)]) {
-        [object JSONAdapterWillConfigure];
+    if ([object respondsToSelector:@selector(JSONAdapterWillConfigureWithDictionary:)]) {
+        [object JSONAdapterWillConfigureWithDictionary:dictionary];
     }
 
     NSDictionary *validationDictionary = [self validationDictionaryForClass:class];
@@ -228,6 +223,17 @@ NSString *const kTOMJSONAdapterKeyForType = @"kTOMJSONAdapterKeyForType";
         NSString *accessorKey = (map ?: key); // Map to accessor.
 
         id value;
+
+        NSNumber *required;
+        if ([propertyValidationDictionary.allKeys containsObject:kTOMJSONAdapterKeyForRequired])
+        {
+            required = propertyValidationDictionary[kTOMJSONAdapterKeyForRequired];
+        }
+        else
+        {
+            // Default to NO unless dictionary contains a kTOMJSONAdapterKeyForRequired key.
+            required = self.defaultValidationDictionary[kTOMJSONAdapterKeyForRequired];
+        }
 
         if (NSNotFound != [key rangeOfString:@"."].location) // YES if key contains a period
         {
@@ -255,6 +261,12 @@ NSString *const kTOMJSONAdapterKeyForType = @"kTOMJSONAdapterKeyForType";
                     NSArray *array = [self arrayFromArray:newObject objectType:class];
 
                     [object setValue:array forKey:accessorKey];
+
+                    continue;
+                }
+                else if (nil == newObject && NO == required.boolValue)
+                {
+                    // It doesn’t exist and it doesn’t matter.
                     continue;
                 }
                 else
@@ -271,17 +283,6 @@ NSString *const kTOMJSONAdapterKeyForType = @"kTOMJSONAdapterKeyForType";
         else
         {
             value = dictionary[key];
-        }
-
-        NSNumber *required;
-        if ([propertyValidationDictionary.allKeys containsObject:kTOMJSONAdapterKeyForRequired])
-        {
-            required = propertyValidationDictionary[kTOMJSONAdapterKeyForRequired];
-        }
-        else
-        {
-            // Default to NO unless dictionary contains a kTOMJSONAdapterKeyForRequired key.
-            required = self.defaultValidationDictionary[kTOMJSONAdapterKeyForRequired];
         }
 
         if (required.boolValue && NO == [dictionary.allKeys containsObject:key])
@@ -347,8 +348,8 @@ NSString *const kTOMJSONAdapterKeyForType = @"kTOMJSONAdapterKeyForType";
         [object setValue:value forKey:accessorKey];
     }
 
-    if ([object respondsToSelector:@selector(JSONAdapterDidConfigure)]) {
-        [object JSONAdapterDidConfigure];
+    if ([object respondsToSelector:@selector(JSONAdapterDidConfigureWithDictionary:)]) {
+        [object JSONAdapterDidConfigureWithDictionary:dictionary];
     }
 
     return object;
@@ -401,7 +402,21 @@ NSString *const kTOMJSONAdapterKeyForType = @"kTOMJSONAdapterKeyForType";
 
     if (nil == dictionary)
     {
-        dictionary = [class JSONAdapterSchema];
+        NSAssert([class respondsToSelector:@selector(JSONAdapterSchema)], @"%@ must implement JSONAdapterSchema class method.", NSStringFromClass(class));
+
+        dictionary = @{};
+        // Allow for models to have a super class implementation of properties.
+        Class aClass = class;
+        for (; aClass; aClass = [aClass superclass])
+        {
+            if ([aClass respondsToSelector:@selector(JSONAdapterSchema)])
+            {
+                NSMutableDictionary *superDictionary = [aClass JSONAdapterSchema].mutableCopy;
+                [superDictionary addEntriesFromDictionary:dictionary];
+                dictionary = superDictionary.copy;
+            }
+        }
+
         NSArray *keyValidationArray = @[
                         kTOMJSONAdapterKeyForMap,
                         kTOMJSONAdapterKeyForRequired,
@@ -558,23 +573,28 @@ NSString *const kTOMJSONAdapterKeyForType = @"kTOMJSONAdapterKeyForType";
 
 - (objc_property_t)propertyForClass:(Class)class propertyName:(NSString *)name
 {
-    unsigned int outCount;
-    objc_property_t *properties = class_copyPropertyList(class, &outCount);
-
-    for (int i = 0; i < outCount; i++)
+    // Allow for models to have a super class implementation of properties.
+    Class aClass = class;
+    for (; aClass; aClass = [aClass superclass])
     {
-        objc_property_t property = properties[i];
+        unsigned int outCount;
+        objc_property_t *properties = class_copyPropertyList(aClass, &outCount);
 
-        const char *propertyName = name.UTF8String;
-        const char *currentPropertyName = property_getName(property);
+        for (int i = 0; i < outCount; i++)
+        {
+            objc_property_t property = properties[i];
 
-        if (0 == strcmp(propertyName, currentPropertyName)) {
-            free(properties);
-            return property;
+            const char *propertyName = name.UTF8String;
+            const char *currentPropertyName = property_getName(property);
+
+            if (0 == strcmp(propertyName, currentPropertyName)) {
+                free(properties);
+                return property;
+            }
         }
+        
+        free(properties);
     }
-
-    free(properties);
 
     return nil;
 }
