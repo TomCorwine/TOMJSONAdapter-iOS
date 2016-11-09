@@ -52,10 +52,20 @@ extern NSString *const kTOMJSONAdapterKeyForDateFormat;
 
 @optional
 
-- (void)JSONAdapterWillConfigureWithDictionary:(NSDictionary *)dictionary;
-- (void)JSONAdapterDidConfigureWithDictionary:(NSDictionary *)dictionary;
+// Specify a factory class method used to create new object. If not implemented,
+// object will be created using [[class alloc] init].
++ (instancetype)JSONAdapterFactory;
 
-@optional
+// Hook to do work after object is created, but before it is configured.
+// If a NSDictionary is returned, it is used instead of the supplied dictionary.
+// This allows for modification of dictionary before object configuration.
+// If nil is returned, then original dictionary is used. No need to pass original
+// dictionary through.
+- (NSDictionary *)JSONAdapterWillConfigureWithDictionary:(NSDictionary *)dictionary;
+
+// Hook to do work after object is configured.
+// NSDictionary provided is the dictionary that was used to configure the object.
+- (void)JSONAdapterDidConfigureWithDictionary:(NSDictionary *)dictionary;
 
 // Alternate way of creating an object
 - (id)initWithDictionary:(NSDictionary *)dictionary;

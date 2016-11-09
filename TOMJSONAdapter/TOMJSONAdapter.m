@@ -208,10 +208,20 @@ NSString *const kTOMJSONAdapterKeyForType = @"kTOMJSONAdapterKeyForType";
         return [[class alloc] initWithDictionary:dictionary]; // Alternate way of initializing object.
     }
 
-    id object = [[class alloc] init];
+    id object;
 
-    if ([object respondsToSelector:@selector(JSONAdapterWillConfigureWithDictionary:)]) {
-        [object JSONAdapterWillConfigureWithDictionary:dictionary];
+    if ([class respondsToSelector:@selector(JSONAdapterFactory)]) {
+        object = [class JSONAdapterFactory];
+    } else {
+        object = [[class alloc] init];
+    }
+
+    if ([object respondsToSelector:@selector(JSONAdapterWillConfigureWithDictionary:)])
+    {
+        NSDictionary *newDictionary = [object JSONAdapterWillConfigureWithDictionary:dictionary];
+        if (newDictionary) {
+            dictionary = newDictionary;
+        }
     }
 
     NSDictionary *validationDictionary = [self validationDictionaryForClass:class];
@@ -239,12 +249,12 @@ NSString *const kTOMJSONAdapterKeyForType = @"kTOMJSONAdapterKeyForType";
         {
             NSArray *keys = [key componentsSeparatedByString:@"."];
 
-            if (nil == map)
-            {
-                NSString *string = [NSString stringWithFormat:@"A map key is required with dot notation for key %@.", key];
-                [self createErrorWithType:kTOMJSONAdapterObjectFailedValidation additionalInfo:string];
+            if (nil == map) {
+                accessorKey = keys.lastObject;
+                //NSString *string = [NSString stringWithFormat:@"A map key is required with dot notation for key %@.", key];
+                //[self createErrorWithType:kTOMJSONAdapterObjectFailedValidation additionalInfo:string];
 
-                continue;
+                //continue;
             }
 
             id newObject = dictionary;
@@ -271,7 +281,7 @@ NSString *const kTOMJSONAdapterKeyForType = @"kTOMJSONAdapterKeyForType";
                 }
                 else
                 {
-                    NSString *string = [NSString stringWithFormat:@"Unable to find subkey: %@ on %@", subKey, key];
+                    NSString *string = [NSString stringWithFormat:@"Unable to find subkey: '%@' on '%@'", subKey, key];
                     [self createErrorWithType:kTOMJSONAdapterObjectFailedValidation additionalInfo:string];
 
                     continue;
@@ -287,14 +297,14 @@ NSString *const kTOMJSONAdapterKeyForType = @"kTOMJSONAdapterKeyForType";
 
         if (required.boolValue && NO == [dictionary.allKeys containsObject:key])
         {
-            NSString *string = [NSString stringWithFormat:@"Missing required parameter %@", key];
+            NSString *string = [NSString stringWithFormat:@"Missing required parameter '%@'", key];
             [self createErrorWithType:kTOMJSONAdapterObjectFailedValidation additionalInfo:string];
 
             continue;
         }
 
-        if (nil == value) {
-            continue; // Property doesn't exist or is nil.
+        if (nil == value || [value isKindOfClass:[NSNull class]]) {
+            continue; // Property doesn't exist, is nil, or is a NSNull object.
         }
 
         NSObjectReturnType returnType = [self returnTypeForClass:[object class] property:accessorKey];
@@ -304,7 +314,7 @@ NSString *const kTOMJSONAdapterKeyForType = @"kTOMJSONAdapterKeyForType";
             case NSObjectReturnTypeNotFound:
             case NSObjectReturnTypeUnknown:
             {
-                NSString *string = @"Unknown return type.";
+                NSString *string = [NSString stringWithFormat:@"Unknown return type for key '%@'.", accessorKey];
                 [self createErrorWithType:kTOMJSONAdapterObjectFailedValidation additionalInfo:string];
 
                 continue;
@@ -493,12 +503,12 @@ NSString *const kTOMJSONAdapterKeyForType = @"kTOMJSONAdapterKeyForType";
 
     string = [self errorMessageWithClassNameForErrorMessage:string];
     if (info.length) {
-        string = [NSString stringWithFormat:@"%@ — %@.", string, info];
+        string = [NSString stringWithFormat:@"%@ - %@.", string, info];
     } else {
         string = [string stringByAppendingString:@"."];
     }
 
-    NSError *error = [NSError errorWithDomain:string code:errorType userInfo:nil];
+    NSError *error = [NSError errorWithDomain:string code:errorType userInfo:@{}];
 
     [self.errors addObject:error];
 }
