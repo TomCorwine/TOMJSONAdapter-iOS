@@ -204,7 +204,7 @@ NSString *const kTOMJSONAdapterKeyForType = @"kTOMJSONAdapterKeyForType";
         return dictionary;
     }
 
-    if ([class respondsToSelector:@selector(initWithDictionary:)]) {
+    if ([class instancesRespondToSelector:@selector(initWithDictionary:)]) {
         return [[class alloc] initWithDictionary:dictionary]; // Alternate way of initializing object.
     }
 
