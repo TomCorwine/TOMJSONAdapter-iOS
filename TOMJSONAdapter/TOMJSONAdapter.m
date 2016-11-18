@@ -59,7 +59,7 @@ NSString *const kTOMJSONAdapterKeyForType = @"kTOMJSONAdapterKeyForType";
 
 #pragma mark - Object Creation
 
-- (id)createFromJSONRepresentation:(id)JSONRepresentation expectedRootClass:(__unsafe_unretained Class)rootClass errors:(NSArray *__autoreleasing *)errors
+- (id)createFromJSONRepresentation:(id)JSONRepresentation rootClass:(__unsafe_unretained Class)rootClass errors:(NSArray *__autoreleasing *)errors
 {
     if ([JSONRepresentation isKindOfClass:[NSData class]]) {
         JSONRepresentation = [[NSString alloc] initWithData:JSONRepresentation encoding:NSUTF8StringEncoding];
@@ -295,16 +295,19 @@ NSString *const kTOMJSONAdapterKeyForType = @"kTOMJSONAdapterKeyForType";
             value = dictionary[key];
         }
 
-        if (required.boolValue && NO == [dictionary.allKeys containsObject:key])
+        if (nil == value) // Property doesn't exist or is nil.
         {
-            NSString *string = [NSString stringWithFormat:@"Missing required parameter '%@'", key];
-            [self createErrorWithType:kTOMJSONAdapterObjectFailedValidation additionalInfo:string];
+            if (required.boolValue) // If this property is required, this is an error.
+            {
+                NSString *string = [NSString stringWithFormat:@"Missing required parameter '%@'", key];
+                [self createErrorWithType:kTOMJSONAdapterObjectFailedValidation additionalInfo:string];
+            }
 
             continue;
         }
 
-        if (nil == value || [value isKindOfClass:[NSNull class]]) {
-            continue; // Property doesn't exist, is nil, or is a NSNull object.
+        if ([value isKindOfClass:[NSNull class]]) {
+            continue; // property is a NSNull object, just let it be nil.
         }
 
         NSObjectReturnType returnType = [self returnTypeForClass:[object class] property:accessorKey];
@@ -353,6 +356,7 @@ NSString *const kTOMJSONAdapterKeyForType = @"kTOMJSONAdapterKeyForType";
         }
 
         // TODO: Take a look here and see if we can incorporate read-only and customer setter check.
+        // UPDATE: None of the above things matter. setValue:forKey: always sets the ivar.
         // https://developer.apple.com/library/mac/documentation/Cocoa/Conceptual/ObjCRuntimeGuide/Articles/ocrtPropertyIntrospection.html#//apple_ref/doc/uid/TP40008048-CH101-SW1
 
         [object setValue:value forKey:accessorKey];

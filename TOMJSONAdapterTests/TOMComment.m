@@ -38,9 +38,11 @@
 	};
 }
 
-- (void)JSONAdapterWillConfigureWithDictionary:(NSDictionary *)dictionary
+- (NSDictionary *)JSONAdapterWillConfigureWithDictionary:(NSDictionary *)dictionary
 {
     self.willConfigureTriggered = YES;
+
+    return nil;
 }
 
 - (void)JSONAdapterDidConfigureWithDictionary:(NSDictionary *)dictionary
