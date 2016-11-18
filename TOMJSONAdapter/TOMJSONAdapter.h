@@ -61,7 +61,7 @@ extern NSString *const kTOMJSONAdapterKeyForDateFormat;
 // This allows for modification of dictionary before object configuration.
 // If nil is returned, then original dictionary is used. No need to pass original
 // dictionary through.
-- (NSDictionary *)JSONAdapterWillConfigureWithDictionary:(NSDictionary *)dictionary;
+- (NSDictionary *)JSONAdapterWillConfigureWithDictionary:(NSMutableDictionary *)dictionary;
 
 // Hook to do work after object is configured.
 // NSDictionary provided is the dictionary that was used to configure the object.

@@ -86,7 +86,14 @@ NSString *const kTOMJSONAdapterKeyForType = @"kTOMJSONAdapterKeyForType";
 
     NSDictionary *validationDictionary = (rootClass ? @{kTOMJSONAdapterKeyForType: rootClass} : nil);
 
-    id root = [self objectFromObject:JSONRepresentation validationDictionary:validationDictionary];
+    NSString *errorMessage;
+    id root = [self objectFromObject:JSONRepresentation validationDictionary:validationDictionary errorMessage:&errorMessage];
+
+    if (errorMessage)
+    {
+        NSString *string = [self errorString:errorMessage forExpectedClass:rootClass accessor:@"rootObject"];
+        [self createErrorWithType:kTOMJSONAdapterObjectFailedValidation additionalInfo:string];
+    }
 
     if (NO == [[root class] isEqual:rootClass]) {
         [self createErrorWithType:kTOMJSONAdapterObjectFailedValidation additionalInfo:nil];
@@ -101,7 +108,7 @@ NSString *const kTOMJSONAdapterKeyForType = @"kTOMJSONAdapterKeyForType";
 
 #pragma mark - Object Creation Helpers
 
-- (id)objectFromObject:(id)object validationDictionary:(NSDictionary *)validationDictionary
+- (id)objectFromObject:(id)object validationDictionary:(NSDictionary *)validationDictionary errorMessage:(NSString **)errorMessage
 {
     if (nil == object || [object isKindOfClass:[NSNull class]]) {
         return nil;
@@ -118,12 +125,11 @@ NSString *const kTOMJSONAdapterKeyForType = @"kTOMJSONAdapterKeyForType";
         if ([object isKindOfClass:[NSArray class]])
         {
             Class arrayClassType = validationDictionary[kTOMJSONAdapterKeyForArrayContents];
-            object = [self arrayFromArray:object objectType:arrayClassType];
+            object = [self arrayFromArray:object objectType:arrayClassType errorMessage:errorMessage];
         }
         else
         {
-            NSString *errorDescription = [NSString stringWithFormat:@"Expecting NSArray, got %@", NSStringFromClass([object class])];
-            [self createErrorWithType:kTOMJSONAdapterObjectFailedValidation additionalInfo:errorDescription];
+            *errorMessage = [self errorStringForExpectedClass:[NSArray class] actualClass:[object class]];
 
             object = nil;
         }
@@ -132,8 +138,7 @@ NSString *const kTOMJSONAdapterKeyForType = @"kTOMJSONAdapterKeyForType";
     {
         if (NO == [object isKindOfClass:[NSString class]])
         {
-            NSString *errorDescription = [NSString stringWithFormat:@"Expecting NSString, got %@", NSStringFromClass([object class])];
-            [self createErrorWithType:kTOMJSONAdapterObjectFailedValidation additionalInfo:errorDescription];
+            *errorMessage = [self errorStringForExpectedClass:[NSString class] actualClass:[object class]];
 
             object = nil;
         }
@@ -151,8 +156,7 @@ NSString *const kTOMJSONAdapterKeyForType = @"kTOMJSONAdapterKeyForType";
         }
         else
         {
-            NSString *errorDescription = [NSString stringWithFormat:@"Expecting NSDate, got %@", NSStringFromClass([object class])];
-            [self createErrorWithType:kTOMJSONAdapterObjectFailedValidation additionalInfo:errorDescription];
+            *errorMessage = [self errorStringForExpectedClass:[NSDate class] actualClass:[object class]];
 
             object = nil;
         }
@@ -161,8 +165,7 @@ NSString *const kTOMJSONAdapterKeyForType = @"kTOMJSONAdapterKeyForType";
     {
         if (NO == [object isKindOfClass:[NSNumber class]])
         {
-            NSString *errorDescription = [NSString stringWithFormat:@"Expecting NSNumber, got %@", NSStringFromClass([object class])];
-            [self createErrorWithType:kTOMJSONAdapterObjectFailedValidation additionalInfo:errorDescription];
+            *errorMessage = [self errorStringForExpectedClass:[NSNumber class] actualClass:[object class]];
 
             object = nil;
         }
@@ -173,8 +176,7 @@ NSString *const kTOMJSONAdapterKeyForType = @"kTOMJSONAdapterKeyForType";
     }
     else
     {
-        NSString *errorDescription = [NSString stringWithFormat:@"Expecting NSDictionary, got %@", NSStringFromClass([object class])];
-        [self createErrorWithType:kTOMJSONAdapterObjectFailedValidation additionalInfo:errorDescription];
+        *errorMessage = [self errorStringForExpectedClass:[NSDictionary class] actualClass:[object class]];
 
         object = nil;
     }
@@ -182,13 +184,13 @@ NSString *const kTOMJSONAdapterKeyForType = @"kTOMJSONAdapterKeyForType";
     return object;
 }
 
-- (NSArray *)arrayFromArray:(NSArray *)array objectType:(Class)objectType
+- (NSArray *)arrayFromArray:(NSArray *)array objectType:(Class)objectType errorMessage:(NSString **)errorMessage
 {
     NSMutableArray *mutableArray = @[].mutableCopy;
     for (__strong id object in array)
     {
         NSDictionary *validationDictionary = (objectType ? @{kTOMJSONAdapterKeyForType: objectType} : nil);
-        object = [self objectFromObject:object validationDictionary:validationDictionary];
+        object = [self objectFromObject:object validationDictionary:validationDictionary errorMessage:errorMessage];
 
         if (object) {
             [mutableArray addObject:object];
@@ -218,7 +220,7 @@ NSString *const kTOMJSONAdapterKeyForType = @"kTOMJSONAdapterKeyForType";
 
     if ([object respondsToSelector:@selector(JSONAdapterWillConfigureWithDictionary:)])
     {
-        NSDictionary *newDictionary = [object JSONAdapterWillConfigureWithDictionary:dictionary];
+        NSDictionary *newDictionary = [object JSONAdapterWillConfigureWithDictionary:dictionary.mutableCopy];
         if (newDictionary) {
             dictionary = newDictionary;
         }
@@ -230,7 +232,7 @@ NSString *const kTOMJSONAdapterKeyForType = @"kTOMJSONAdapterKeyForType";
     {
         NSDictionary *propertyValidationDictionary = validationDictionary[key];
         NSString *map = propertyValidationDictionary[kTOMJSONAdapterKeyForMap];
-        NSString *accessorKey = (map ?: key); // Map to accessor.
+        NSString *accessor = (map ?: key); // Map to accessor.
 
         id value;
 
@@ -250,7 +252,7 @@ NSString *const kTOMJSONAdapterKeyForType = @"kTOMJSONAdapterKeyForType";
             NSArray *keys = [key componentsSeparatedByString:@"."];
 
             if (nil == map) {
-                accessorKey = keys.lastObject;
+                accessor = keys.lastObject;
                 //NSString *string = [NSString stringWithFormat:@"A map key is required with dot notation for key %@.", key];
                 //[self createErrorWithType:kTOMJSONAdapterObjectFailedValidation additionalInfo:string];
 
@@ -268,9 +270,17 @@ NSString *const kTOMJSONAdapterKeyForType = @"kTOMJSONAdapterKeyForType";
                 else if ([newObject isKindOfClass:[NSArray class]])
                 {
                     Class class = propertyValidationDictionary[kTOMJSONAdapterKeyForArrayContents];
-                    NSArray *array = [self arrayFromArray:newObject objectType:class];
 
-                    [object setValue:array forKey:accessorKey];
+                    NSString *errorMessage;
+                    NSArray *array = [self arrayFromArray:newObject objectType:class errorMessage:&errorMessage];
+
+                    if (errorMessage)
+                    {
+                        NSString *string = [self errorString:errorMessage forExpectedClass:[object class] accessor:accessor];
+                        [self createErrorWithType:kTOMJSONAdapterObjectFailedValidation additionalInfo:string];
+                    }
+
+                    [object setValue:array forKey:accessor];
 
                     continue;
                 }
@@ -310,14 +320,14 @@ NSString *const kTOMJSONAdapterKeyForType = @"kTOMJSONAdapterKeyForType";
             continue; // property is a NSNull object, just let it be nil.
         }
 
-        NSObjectReturnType returnType = [self returnTypeForClass:[object class] property:accessorKey];
+        NSObjectReturnType returnType = [self returnTypeForClass:[object class] property:accessor];
 
         switch (returnType)
         {
             case NSObjectReturnTypeNotFound:
             case NSObjectReturnTypeUnknown:
             {
-                NSString *string = [NSString stringWithFormat:@"Unknown return type for key '%@'.", accessorKey];
+                NSString *string = [NSString stringWithFormat:@"Unknown return type on '%@' for key '%@'.", NSStringFromClass([object class]), accessor];
                 [self createErrorWithType:kTOMJSONAdapterObjectFailedValidation additionalInfo:string];
 
                 continue;
@@ -341,7 +351,7 @@ NSString *const kTOMJSONAdapterKeyForType = @"kTOMJSONAdapterKeyForType";
             }
             case NSObjectReturnTypeID:
             {
-                Class propertyClass = [self returnTypeClassForClass:[object class] property:accessorKey];
+                Class propertyClass = [self returnTypeClassForClass:[object class] property:accessor];
 
                 if (propertyClass)
                 {
@@ -350,7 +360,15 @@ NSString *const kTOMJSONAdapterKeyForType = @"kTOMJSONAdapterKeyForType";
                     propertyValidationDictionary = mutableDictionary.copy;
                 }
 
-                value = [self objectFromObject:value validationDictionary:propertyValidationDictionary];
+                NSString *errorMessage;
+                value = [self objectFromObject:value validationDictionary:propertyValidationDictionary errorMessage:&errorMessage];
+
+                if (errorMessage)
+                {
+                    NSString *string = [self errorString:errorMessage forExpectedClass:[object class] accessor:accessor];
+                    [self createErrorWithType:kTOMJSONAdapterObjectFailedValidation additionalInfo:string];
+                }
+
                 break;
             }
         }
@@ -359,7 +377,7 @@ NSString *const kTOMJSONAdapterKeyForType = @"kTOMJSONAdapterKeyForType";
         // UPDATE: None of the above things matter. setValue:forKey: always sets the ivar.
         // https://developer.apple.com/library/mac/documentation/Cocoa/Conceptual/ObjCRuntimeGuide/Articles/ocrtPropertyIntrospection.html#//apple_ref/doc/uid/TP40008048-CH101-SW1
 
-        [object setValue:value forKey:accessorKey];
+        [object setValue:value forKey:accessor];
     }
 
     if ([object respondsToSelector:@selector(JSONAdapterDidConfigureWithDictionary:)]) {
@@ -478,6 +496,19 @@ NSString *const kTOMJSONAdapterKeyForType = @"kTOMJSONAdapterKeyForType";
 
 #pragma mark - Error Message Helpers
 
+- (NSString *)errorStringForExpectedClass:(Class)expectedClass actualClass:(Class)actualClass
+{
+    NSString *string = [NSString stringWithFormat:@"Expecting %@, got %@", NSStringFromClass(expectedClass), NSStringFromClass(actualClass)];
+
+    return string;
+}
+
+- (NSString *)errorString:(NSString *)errorString forExpectedClass:(Class)class accessor:(NSString *)accessor
+{
+    NSString *string = [NSString stringWithFormat:@"%@ on %@ for property '%@'", errorString, NSStringFromClass(class), accessor];
+    return string;
+}
+
 - (void)createErrorWithType:(NSUInteger)errorType additionalInfo:(NSString *)info
 {
     NSString *string;
@@ -512,7 +543,7 @@ NSString *const kTOMJSONAdapterKeyForType = @"kTOMJSONAdapterKeyForType";
         string = [string stringByAppendingString:@"."];
     }
 
-    NSError *error = [NSError errorWithDomain:string code:errorType userInfo:@{}];
+    NSError *error = [NSError errorWithDomain:string code:errorType userInfo:nil];
 
     [self.errors addObject:error];
 }
