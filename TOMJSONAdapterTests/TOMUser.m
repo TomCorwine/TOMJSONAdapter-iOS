@@ -38,6 +38,9 @@
 			//kTOMJSONAdapterKeyForType: [NSArray class],
             kTOMJSONAdapterKeyForArrayContents: [TOMThumb class]
 			},
+        @"location.name": @{
+                kTOMJSONAdapterKeyForMap: @"locationName"
+                },
         @"friends.personal": @{
                 kTOMJSONAdapterKeyForMap: @"personalFriends",
                 kTOMJSONAdapterKeyForArrayContents: [NSNumber class]

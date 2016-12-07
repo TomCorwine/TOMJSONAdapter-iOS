@@ -253,26 +253,34 @@ NSString *const kTOMJSONAdapterKeyForType = @"kTOMJSONAdapterKeyForType";
 
             if (nil == map) {
                 accessor = keys.lastObject;
-                //NSString *string = [NSString stringWithFormat:@"A map key is required with dot notation for key %@.", key];
-                //[self createErrorWithType:kTOMJSONAdapterObjectFailedValidation additionalInfo:string];
-
-                //continue;
             }
 
             id newObject = dictionary;
 
             for (NSString *subKey in keys)
             {
+                BOOL isLastKey = [keys.lastObject isEqualToString:subKey];
+
                 if ([newObject isKindOfClass:[NSDictionary class]])
                 {
                     newObject = newObject[subKey];
                 }
+                /*
                 else if ([newObject isKindOfClass:[NSArray class]])
                 {
-                    Class class = propertyValidationDictionary[kTOMJSONAdapterKeyForArrayContents];
+                    Class arrayContentsClass = propertyValidationDictionary[kTOMJSONAdapterKeyForArrayContents];
+
+                    Class propertyClass = [self returnTypeClassForClass:[object class] property:accessor];
+                    if (propertyClass != [NSArray class])
+                    {
+                        NSString *string = [self errorStringForExpectedClass:[NSNumber class] actualClass:[object class]];
+                        [self createErrorWithType:kTOMJSONAdapterObjectFailedValidation additionalInfo:string];
+
+                        continue;
+                    }
 
                     NSString *errorMessage;
-                    NSArray *array = [self arrayFromArray:newObject objectType:class errorMessage:&errorMessage];
+                    NSArray *array = [self arrayFromArray:newObject objectType:arrayContentsClass errorMessage:&errorMessage];
 
                     if (errorMessage)
                     {
@@ -284,17 +292,20 @@ NSString *const kTOMJSONAdapterKeyForType = @"kTOMJSONAdapterKeyForType";
 
                     continue;
                 }
-                else if (nil == newObject && NO == required.boolValue)
+                 */
+                else if (newObject && NO == isLastKey) // Subkey exists, but is not a dictionary.
+                {
+                    NSString *string = [NSString stringWithFormat:@"Subkey: '%@' is not a NSDictonary", subKey];
+                    [self createErrorWithType:kTOMJSONAdapterObjectFailedValidation additionalInfo:string];
+                }
+                else if (NO == required.boolValue)
                 {
                     // It doesn’t exist and it doesn’t matter.
-                    continue;
                 }
                 else
                 {
                     NSString *string = [NSString stringWithFormat:@"Unable to find subkey: '%@' on '%@'", subKey, key];
                     [self createErrorWithType:kTOMJSONAdapterObjectFailedValidation additionalInfo:string];
-
-                    continue;
                 }
             }
 
@@ -335,18 +346,18 @@ NSString *const kTOMJSONAdapterKeyForType = @"kTOMJSONAdapterKeyForType";
             }
             case NSObjectReturnTypeFloat:
             case NSObjectReturnTypeDouble:
-            {
-                // TODO: Validate
-                break;
-            }
             case NSObjectReturnTypeInteger:
-            {
-                // TODO: Validate
-                break;
-            }
             case NSObjectReturnTypeBOOL:
             {
-                // TODO: Validate
+                if (NO == [value isKindOfClass:[NSNumber class]])
+                {
+                    NSString *errorMessage = [self errorStringForExpectedClass:[NSNumber class] actualClass:[value class]];
+                    NSString *string = [self errorString:errorMessage forExpectedClass:[object class] accessor:accessor];
+                    [self createErrorWithType:kTOMJSONAdapterObjectFailedValidation additionalInfo:string];
+
+                    continue;
+                }
+
                 break;
             }
             case NSObjectReturnTypeID:
@@ -372,10 +383,6 @@ NSString *const kTOMJSONAdapterKeyForType = @"kTOMJSONAdapterKeyForType";
                 break;
             }
         }
-
-        // TODO: Take a look here and see if we can incorporate read-only and customer setter check.
-        // UPDATE: None of the above things matter. setValue:forKey: always sets the ivar.
-        // https://developer.apple.com/library/mac/documentation/Cocoa/Conceptual/ObjCRuntimeGuide/Articles/ocrtPropertyIntrospection.html#//apple_ref/doc/uid/TP40008048-CH101-SW1
 
         [object setValue:value forKey:accessor];
     }

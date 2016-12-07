@@ -39,7 +39,9 @@
     \"message\": \"Congrats!\", \
     \"owner\": \"50e5ecfe8768a1336c000019\"}";
 
-	TOMComment *comment = [self parseJson:json expectedClass:[TOMComment class]];
+  NSArray *errors;
+	TOMComment *comment = [self parseJson:json expectedClass:[TOMComment class] errors:errors];
+  XCTAssertNil(errors, @"There are errors.");
 
   if (nil == comment) {
     return;
@@ -59,6 +61,7 @@
   \"name\": \"Congrats!\", \
   \"country\": \"US\", \
 	\"tz\": \"America/New_York\",\
+  \"location\": [],\
   \"friends\": {\
     \"personal\": [\
       8745,\
@@ -72,7 +75,9 @@
     }\
   }";
 
-	TOMUser *user = [self parseJson:json expectedClass:[TOMUser class]];
+  NSArray *errors;
+	TOMUser *user = [self parseJson:json expectedClass:[TOMUser class] errors:errors];
+  XCTAssert(1 == errors.count, @"Expected 1 error.");
 
   if (nil == user) {
     return;
@@ -103,7 +108,9 @@
     \"x\": 576, \
     \"y\": 344}";
 
-	TOMThumb *thumb = [self parseJson:json expectedClass:[TOMThumb class]];
+  NSArray *errors;
+	TOMThumb *thumb = [self parseJson:json expectedClass:[TOMThumb class] errors:errors];
+  XCTAssertNil(errors, @"There are errors.");
 
   if (nil == thumb) {
     return;
@@ -133,7 +140,9 @@
 	\"views\": [\"501fd8718768a126bc000001\", \"511fe8718768a126bc000032\"] \
 	}";
 
-	TOMEntry *entry = [self parseJson:json expectedClass:[TOMEntry class]];
+  NSArray *errors;
+	TOMEntry *entry = [self parseJson:json expectedClass:[TOMEntry class] errors:errors];
+  XCTAssertNil(errors, @"There are errors.");
 
   if (nil == entry) {
     return;
@@ -212,13 +221,11 @@
 
 #pragma mark - Helpers
 
-- (id)parseJson:(NSString *)json expectedClass:(Class)class
+- (id)parseJson:(NSString *)json expectedClass:(Class)class errors:(NSArray *)errors
 {
-	NSArray *errors;
 	TOMJSONAdapter *jsonAdapter = [TOMJSONAdapter JSONAdapter];
 	id object = [jsonAdapter createFromJSONRepresentation:json rootClass:class errors:&errors];
 
-  XCTAssertNil(errors, @"There are errors.");
   XCTAssertNotNil(object, @"Root object is nil.");
 
   BOOL isCorrectClass = [object isKindOfClass:class];
