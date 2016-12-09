@@ -153,6 +153,10 @@ NSString *const kTOMJSONAdapterKeyForType = @"kTOMJSONAdapterKeyForType";
             dateFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
             dateFormatter.dateFormat = dateFormat;
             object = [dateFormatter dateFromString:object];
+
+            if (nil == object) {
+                *errorMessage = @"Unable to parse date string";
+            }
         }
         else
         {
