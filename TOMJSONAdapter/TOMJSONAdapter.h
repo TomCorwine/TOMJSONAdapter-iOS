@@ -21,6 +21,7 @@ extern NSString *const kTOMJSONAdapterKeyForRequired;
 extern NSString *const kTOMJSONAdapterKeyForMap;
 extern NSString *const kTOMJSONAdapterKeyForArrayContents;
 extern NSString *const kTOMJSONAdapterKeyForDateFormat;
+extern NSString *const kTOMJSONAdapterKeyForFallbackToNumber;
 
 @protocol TOMJSONAdapterProtocol <NSObject>
 /*
@@ -29,9 +30,10 @@ extern NSString *const kTOMJSONAdapterKeyForDateFormat;
  	@"oid": @{
  		kTOMJSONAdapterKeyForMap: @"objectID"
  		},
- 	@"name": @{,
+ 	@"name": @{
  		},
  	@"count": @{
+    kTOMJSONAdapterKeyForFallbackToNumber: @YES
  		},
   @"items": @{
     kTOMJSONAdapterKeyForArrayContents: [TOMEntry class]
@@ -53,7 +55,7 @@ extern NSString *const kTOMJSONAdapterKeyForDateFormat;
 @optional
 
 // Specify a factory class method used to create new object. If not implemented,
-// object will be created using [[class alloc] init].
+// object will be created using [[Class alloc] init].
 + (instancetype)JSONAdapterFactory;
 
 // Hook to do work after object is created, but before it is configured.
@@ -75,7 +77,7 @@ extern NSString *const kTOMJSONAdapterKeyForDateFormat;
 @interface TOMJSONAdapter : NSObject
 
 /*
- Right now only supports kTOMJSONAdapterKeyForRequired.
+ Right now only supports kTOMJSONAdapterKeyForRequired and kTOMJSONAdapterKeyForFallbackToNumber.
  */
 @property (nonatomic, strong) NSDictionary *defaultValidationDictionary;
 

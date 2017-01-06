@@ -62,6 +62,7 @@
   \"country\": \"US\", \
 	\"tz\": \"America/New_York\",\
   \"location\": [],\
+  \"postal_code\": 32606,\
   \"friends\": {\
     \"personal\": [\
       8745,\
@@ -86,6 +87,8 @@
   XCTAssertTrue([user.userID isEqualToString:@"511fe8718768a126bc000032"], @"userID doesn’t match");
   XCTAssertTrue([user.country isEqualToString:@"US"], @"country doesn’t match");
   XCTAssertTrue([user.timeZone isEqualToString:@"America/New_York"], @"timeZone doesn’t match");
+
+  XCTAssertTrue([user.postalCode isEqualToString:@"32606"], @"postalCode didn’t transform number to string.");
 
   // TODO: Rewrite these to insure exception won’t be thrown if array isn’t created properly.
   XCTAssertTrue([user.personalFriends isKindOfClass:[NSArray class]]);

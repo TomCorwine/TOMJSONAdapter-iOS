@@ -33,11 +33,18 @@
 			kTOMJSONAdapterKeyForMap: @"timeZone",
 			//kTOMJSONAdapterKeyForType: [NSString class]
 			},
+        @"location": @{
+                kTOMJSONAdapterKeyForMap: @"locationName"
+                },
 		@"thumbs": @{
 			kTOMJSONAdapterKeyForRequired: @NO,
 			//kTOMJSONAdapterKeyForType: [NSArray class],
             kTOMJSONAdapterKeyForArrayContents: [TOMThumb class]
 			},
+        @"postal_code": @{
+                kTOMJSONAdapterKeyForMap: @"postalCode",
+                kTOMJSONAdapterKeyForFallbackToNumber: @YES
+                },
         @"location.name": @{
                 kTOMJSONAdapterKeyForMap: @"locationName"
                 },

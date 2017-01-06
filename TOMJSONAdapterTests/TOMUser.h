@@ -15,6 +15,7 @@
 @property (nonatomic, strong) NSString *timeZone;
 @property (nonatomic, strong) NSString *locationName;
 @property (nonatomic, strong) NSArray *thumbs;
+@property (nonatomic, strong) NSString *postalCode;
 
 @property (nonatomic, strong) NSArray *personalFriends;
 @property (nonatomic, strong) NSArray *professionalFriends;

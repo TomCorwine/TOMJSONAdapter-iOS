@@ -29,6 +29,7 @@ NSString *const kTOMJSONAdapterKeyForRequired = @"kTOMJSONAdapterKeyForRequired"
 NSString *const kTOMJSONAdapterKeyForMap = @"kTOMJSONAdapterKeyForMap";
 NSString *const kTOMJSONAdapterKeyForArrayContents = @"kTOMJSONAdapterKeyForArrayContents";
 NSString *const kTOMJSONAdapterKeyForDateFormat = @"kTOMJSONAdapterKeyForDateFormat";
+NSString *const kTOMJSONAdapterKeyForFallbackToNumber = @"kTOMJSONAdapterKeyForFallbackToNumber";
 
 NSString *const kTOMJSONAdapterKeyForType = @"kTOMJSONAdapterKeyForType";
 
@@ -136,7 +137,22 @@ NSString *const kTOMJSONAdapterKeyForType = @"kTOMJSONAdapterKeyForType";
     }
     else if ([classType isEqual:[NSString class]])
     {
-        if (NO == [object isKindOfClass:[NSString class]])
+        NSNumber *shouldFallbackToNumber = self.defaultValidationDictionary[kTOMJSONAdapterKeyForFallbackToNumber];
+        NSNumber *classShouldFallbackToNumber = validationDictionary[kTOMJSONAdapterKeyForFallbackToNumber];
+
+        if (classShouldFallbackToNumber) {
+            shouldFallbackToNumber = classShouldFallbackToNumber;
+        }
+
+        if ([object isKindOfClass:[NSString class]])
+        {
+            // No work needed in this case.
+        }
+        else if ([object isKindOfClass:[NSNumber class]] && shouldFallbackToNumber.boolValue)
+        {
+            object = [object stringValue];
+        }
+        else
         {
             *errorMessage = [self errorStringForExpectedClass:[NSString class] actualClass:[object class]];
 
@@ -465,7 +481,8 @@ NSString *const kTOMJSONAdapterKeyForType = @"kTOMJSONAdapterKeyForType";
                         kTOMJSONAdapterKeyForRequired,
                         kTOMJSONAdapterKeyForType,
                         kTOMJSONAdapterKeyForArrayContents,
-                        kTOMJSONAdapterKeyForDateFormat
+                        kTOMJSONAdapterKeyForDateFormat,
+                        kTOMJSONAdapterKeyForFallbackToNumber
                         ];
 
         for (NSString *objectKey in dictionary.allKeys)
@@ -491,7 +508,7 @@ NSString *const kTOMJSONAdapterKeyForType = @"kTOMJSONAdapterKeyForType";
                     NSString *string = [NSString stringWithFormat:@"Validation value for key %@ in class %@ is not a NSString.", key, NSStringFromClass(class)];
                     NSAssert([value isKindOfClass:[NSString class]], [[self class] errorMessageWithClassNameForErrorMessage:string]);
                 }
-                else if ([key isEqualToString:kTOMJSONAdapterKeyForRequired])
+                else if ([key isEqualToString:kTOMJSONAdapterKeyForRequired] || [key isEqualToString:kTOMJSONAdapterKeyForFallbackToNumber])
                 {
                     NSString *string = [NSString stringWithFormat:@"Validation value for property %@ and key %@ in class %@ is not a NSNumber.", objectKey, key, NSStringFromClass(class)];
                     NSAssert([value isKindOfClass:[NSNumber class]], [[self class] errorMessageWithClassNameForErrorMessage:string]);
